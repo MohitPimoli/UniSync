@@ -6,7 +6,7 @@ UniSync - Transforming Problems Into Solutions
 
 ## Step 1. nodejs v18
 
-Node.js Version: Ensure you have Node.js version *18.20.4* installed. (Download Nodejs )[https://nodejs.org/en/download/prebuilt-installer/current]
+Node.js Version: Ensure you have Node.js version `18.20.4` installed. [Download Nodejs](https://nodejs.org/en/download/prebuilt-installer/current)
 
 ## Step 2. npm v10
 
@@ -18,7 +18,7 @@ npm install -g npm
 
 ## Step 3. Delete node_modules:
 
-Remove the node_modules directory from both your frontend and backend folders.
+Remove the `node_modules` directory from both your frontend and backend folders.
 
 ## Step 4. Backend Setup.
 
