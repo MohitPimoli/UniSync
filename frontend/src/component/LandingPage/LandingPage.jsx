@@ -1,10 +1,12 @@
 import React from "react";
-
-function landing() {
+// import Button from 'react-bootstrap/Button';
+// import login from "../LoginPage/LoginPage";
+function landing(){
   return (
-    <div>
+    <>
       <h1>Home Page urf Landing Page</h1>
-    </div>
+      <a href="./login" className="make_button">Login</a>
+    </>
   );
 }
 
