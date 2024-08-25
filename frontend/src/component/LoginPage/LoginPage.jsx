@@ -7,5 +7,11 @@ function login() {
     </div>
   );
 }
-
+// Variables are
+//email, password
+//same spelling and same case use kiya hai mane
+//      const response = await axios.post('http://127.0.0.1:5001/login', {
+//        email,
+//        password
+//      });
 export default login;
