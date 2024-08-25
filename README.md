@@ -32,6 +32,12 @@ npm install
 ```shell
 node index.js
 ```
+## Step 4.5 Setup MongoDB
+create a database `unisync` with a collection `users`.
+
+![image](https://github.com/user-attachments/assets/2ccb5a59-4779-4fe7-9250-fc8ea6907e64)
+
+
 
 ## Step 5. Frontend Setup.
 
