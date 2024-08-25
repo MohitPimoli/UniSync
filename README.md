@@ -6,11 +6,15 @@ UniSync - Transforming Problems Into Solutions
 
 ## Step 1. nodejs v18
 
-Node.js Version: Ensure you have Node.js version 18.20.4 installed.
+Node.js Version: Ensure you have Node.js version *18.20.4* installed. (Download Nodejs )[https://nodejs.org/en/download/prebuilt-installer/current]
 
 ## Step 2. npm v10
 
-Confirm that you have npm version 10.8.2 installed.
+Confirm that you have npm version 10.8.2 installed. 
+use the following command.
+```shell
+npm install -g npm
+```
 
 ## Step 3. Delete node_modules:
 
