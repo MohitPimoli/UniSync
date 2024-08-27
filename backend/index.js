@@ -2,7 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 const app = express();
+
 app.use(express.json());
 app.use(cors());
 
@@ -16,49 +19,106 @@ const userSchema = new mongoose.Schema({
     Name: String,
     Username: String,
     Email: String,
-    Pass: String
+    Pass: String,
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 });
 
 const User = mongoose.model('Users', userSchema);
 
-app.post('/register', (req, res) => {
-    const { name, username, email, password } = req.body;
-    if (!name || !username || !email || !newPassword) {
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'noreply.unisync@gmail.com',
+        pass: '(noreply.unisync)'
+    }
+});
+
+app.post('/reset', async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ Email: email });
+
+        if (!user) {
+            return res.status(404).send({ message: 'User with this email does not exist' });
+        }
+
+        const token = crypto.randomBytes(20).toString('hex');
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 600000; // 10 min from now
+        await user.save();
+
+        const resetLink = `http://localhost:3000/forget/${token}`; // Change to your front-end URL
+        const mailOptions = {
+            from: 'noreply.unisync@gmail.com',
+            to: user.Email,
+            subject: 'Password Reset Request',
+            text: `You are receiving this because you (or someone else) have requested to reset your password. Please click on the following link to complete the process: ${resetLink}
+            This link will expire in 10 minutes. If you did not request this, please ignore this email and your password will remain unchanged.`
+        };
+
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                console.error('Error sending email:', err);
+                return res.status(500).send({ message: 'Error sending reset email' });
+            }
+            res.status(200).send({ message: 'A reset link has been sent to your email address.' });
+            console.log("email send");
+        });
+    } catch (err) {
+        console.error('Error processing request:', err);
+        res.status(500).send({ message: 'Server error. Please try again later.' });
+    }
+});
+
+app.post('/register', async (req, res) => {
+    const { name, username, email, CnfPassword } = req.body;
+
+    if (!name || !username || !email || !CnfPassword) {
         res.status(400).send({ message: 'Missing required fields' });
         return;
     }
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-    const user = new User({ Name, Username, Email, Pass: hashedPassword });
-    user.save()
-        .then(result => {
-            res.send({ message: 'Registration successful' });
-        })
-        .catch(err => {
-            res.status(500).send({ message: 'An Server Side Error Occured! Please Register Once Again' });
+
+    try {
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(CnfPassword, salt);
+
+        const user = new User({
+            Name: name,
+            Username: username,
+            Email: email,
+            Pass: hashedPassword
         });
+        await user.save();
+        res.send({ message: 'Registration successful' });
+    } catch (err) {
+        res.status(500).send({ message: 'Server Side Error Occurred! Please Register Once Again' });
+    }
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    User.findOne({ Username: username })
-        .then(user => {
-            if (!user) {
-                res.status(401).send({ message: 'Invalid email or password' });
-                return;
-            }
-            const isPasswordValid = bcrypt.compareSync(password, user.Pass);
-            if (!isPasswordValid) {
-                res.status(401).send({ message: 'Invalid email or password' });
-                console.log('failed to login');
-                return;
-            }
-            res.status(200).send({ message: 'Login successful' });
-            console.log('Login Successful');
-        })
-        .catch(err => {
-            res.status(500).send({ message: 'Error logging in' });
-        });
+
+    try {
+        const user = await User.findOne({ Username: username });
+
+        if (!user) {
+            res.status(401).send({ message: 'Invalid username or password' });
+            return;
+        }
+
+        const isPasswordValid = bcrypt.compareSync(password, user.Pass);
+
+        if (!isPasswordValid) {
+            res.status(401).send({ message: 'Invalid username or password' });
+            return;
+        }
+
+        res.status(200).send({ message: 'Login successful' });
+    } catch (err) {
+        res.status(500).send({ message: 'Error logging in' });
+    }
 });
 
 app.listen(5001, () => {

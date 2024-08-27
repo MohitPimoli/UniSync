@@ -6,12 +6,12 @@ const FormContainer = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [CnfPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(""); // State to manage the success message
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
+    if (password !== CnfPassword) {
       setMessage("Passwords do not match!");
       return;
     }
@@ -24,7 +24,7 @@ const FormContainer = () => {
         name,
         username,
         email,
-        password,
+        CnfPassword,
       }),
     });
 
@@ -34,7 +34,7 @@ const FormContainer = () => {
       setTimeout(() => {
         setMessage("");
         document.getElementById("signIn").click(); // Trigger the redirect to sign-in
-      }, 2000); // Redirect after 2 seconds
+      }, 1500); // Redirect after 1.5 seconds
     } else {
       setMessage(data.message || "Registration failed!");
     }
@@ -99,7 +99,7 @@ const FormContainer = () => {
           <input
             type="password"
             placeholder="Confirm your Password"
-            value={confirmPassword}
+            value={CnfPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
