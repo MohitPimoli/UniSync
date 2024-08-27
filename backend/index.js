@@ -30,7 +30,7 @@ const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
         user: 'noreply.unisync@gmail.com',
-        pass: '(noreply.unisync)'
+        pass: 'vdit dxwt jluw kfkz'
     }
 });
 
@@ -64,10 +64,35 @@ app.post('/reset', async (req, res) => {
                 return res.status(500).send({ message: 'Error sending reset email' });
             }
             res.status(200).send({ message: 'A reset link has been sent to your email address.' });
-            console.log("email send");
         });
     } catch (err) {
         console.error('Error processing request:', err);
+        res.status(500).send({ message: 'Server error. Please try again later.' });
+    }
+});
+
+app.post('/reset-password', async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    try {
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.status(400).send({ message: 'Password reset token is invalid or has expired.' });
+        }
+
+        const salt = bcrypt.genSaltSync(10);
+        user.Pass = bcrypt.hashSync(newPassword, salt);
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+
+        await user.save();
+
+        res.status(200).send({ message: 'Your password has been successfully reset.' });
+    } catch (err) {
         res.status(500).send({ message: 'Server error. Please try again later.' });
     }
 });
