@@ -11,10 +11,10 @@ Node.js Version: Ensure you have Node.js version `18.20.4` installed. [Download 
 ## Step 2. npm v10
 
 Confirm that you have npm version 10.8.2 installed. 
-use the following command.
 ```shell
-npm install -g npm
+npm -v
 ```
+if not then try to install it.
 
 ## Step 3. Delete node_modules:
 
