@@ -4,17 +4,29 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-const app = express();
+const rateLimit = require('express-rate-limit');
+const { body, validationResult } = require('express-validator');
+require('dotenv').config(); // Load environment variables from .env file
 
+const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect('mongodb://127.0.0.1:27017/unisync', { useNewUrlParser: true, useUnifiedTopology: true })
+// Connect to MongoDB
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch(err => {
         console.error('Kuch To gadbadh Hai', err);
         process.exit(1);
     });
 
+// Rate limiting middleware to prevent brute-force attacks
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // Limit each IP to 10 requests per windowMs
+    message: 'Too many login attempts from this IP, please try again after 15 minutes'
+});
+
+// Schema for user data
 const userSchema = new mongoose.Schema({
     Name: String,
     Username: String,
@@ -26,15 +38,24 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('Users', userSchema);
 
+// Nodemailer transport with environment variables for security
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: 'noreply.unisync@gmail.com',
-        pass: 'vdit dxwt jluw kfkz'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
-app.post('/reset', async (req, res) => {
+// POST /reset: Password reset request
+app.post('/reset', [
+    body('email').isEmail().withMessage('Invalid email format')
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { email } = req.body;
 
     try {
@@ -45,13 +66,13 @@ app.post('/reset', async (req, res) => {
         }
 
         const token = crypto.randomBytes(20).toString('hex');
-        user.resetPasswordToken = token;
-        user.resetPasswordExpires = Date.now() + 600000; // 10 min from now
+        user.resetPasswordToken = bcrypt.hashSync(token, 10);
+        user.resetPasswordExpires = Date.now() + 600000;
         await user.save();
 
-        const resetLink = `http://localhost:3000/forget/${token}`; // Change to your front-end URL
+        const resetLink = `http://localhost:3000/forget/${token}`;
         const mailOptions = {
-            from: 'noreply.unisync@gmail.com',
+            from: process.env.EMAIL_USER,
             to: user.Email,
             subject: 'Password Reset Request',
             text: `You are receiving this because you (or someone else) have requested to reset your password. Please click on the following link to complete the process: ${resetLink}
@@ -71,16 +92,16 @@ app.post('/reset', async (req, res) => {
     }
 });
 
+// POST /reset-password: Reset the password
 app.post('/reset-password', async (req, res) => {
     const { token, newPassword } = req.body;
 
     try {
         const user = await User.findOne({
-            resetPasswordToken: token,
             resetPasswordExpires: { $gt: Date.now() }
         });
 
-        if (!user) {
+        if (!user || !bcrypt.compareSync(token, user.resetPasswordToken)) {
             return res.status(400).send({ message: 'Password reset token is invalid or has expired.' });
         }
 
@@ -97,13 +118,19 @@ app.post('/reset-password', async (req, res) => {
     }
 });
 
-app.post('/register', async (req, res) => {
-    const { name, username, email, CnfPassword } = req.body;
-
-    if (!name || !username || !email || !CnfPassword) {
-        res.status(400).send({ message: 'Missing required fields' });
-        return;
+// POST /register: Register a new user with input validation
+app.post('/register', [
+    body('email').isEmail().withMessage('Invalid email format'),
+    body('name').notEmpty().withMessage('Name is required'),
+    body('username').notEmpty().withMessage('Username is required'),
+    body('CnfPassword').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
+
+    const { name, username, email, CnfPassword } = req.body;
 
     try {
         const salt = bcrypt.genSaltSync(10);
@@ -122,7 +149,8 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.post('/login', async (req, res) => {
+// POST /login: User login with rate limiting
+app.post('/login', loginLimiter, async (req, res) => {
     const { username, password } = req.body;
 
     try {
@@ -146,6 +174,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// Server listening on port 5001
 app.listen(5001, () => {
     console.log('Server is running on port 5001');
 });

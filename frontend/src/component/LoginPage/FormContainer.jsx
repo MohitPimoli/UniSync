@@ -2,67 +2,90 @@ import React, { useState } from "react";
 import SocialContainer from "./SocialContainer";
 
 const FormContainer = () => {
+  // State for Signup
   const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const [usernameSignup, setUsernameSignup] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [CnfPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState(""); // State to manage the success message
+  const [signupMessages, setSignupMessages] = useState([]); // Array for signup messages
 
+  // State for Login
+  const [usernameLogin, setUsernameLogin] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginMessage, setLoginMessage] = useState(""); // State for login message
+
+  // Signup Handler
   const handleSignup = async (e) => {
     e.preventDefault();
     if (password !== CnfPassword) {
-      setMessage("Passwords do not match!");
+      setSignupMessages(["Passwords do not match!"]);
       return;
     }
-    const response = await fetch("http://localhost:5001/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        username,
-        email,
-        CnfPassword,
-      }),
-    });
 
-    const data = await response.json();
-    if (response.ok) {
-      setMessage("Registration successful!");
-      setTimeout(() => {
-        setMessage("");
-        document.getElementById("signIn").click(); // Trigger the redirect to sign-in
-      }, 1500); // Redirect after 1.5 seconds
-    } else {
-      setMessage(data.message || "Registration failed!");
+    try {
+      const response = await fetch("http://localhost:5001/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          username: usernameSignup,
+          email,
+          CnfPassword,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setSignupMessages(["Registration successful!"]);
+        setTimeout(() => {
+          setSignupMessages([]);
+          document.getElementById("signIn").click(); // Redirect to sign-in form
+        }, 1500);
+      } else {
+        // If there are validation errors, display them
+        const errorMessages = data.errors
+          ? data.errors.map((err) => err.msg)
+          : [data.message || "Registration failed!"];
+        setSignupMessages(errorMessages);
+      }
+    } catch (error) {
+      setSignupMessages(["An error occurred. Please try again."]);
     }
   };
 
+  // Login Handler
   const handleLogin = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5001/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
 
-    const data = await response.json();
-    if (response.ok) {
-      alert("Login successful!");
-    } else {
-      alert(data.message || "Login failed!");
+    try {
+      const response = await fetch("http://localhost:5001/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: usernameLogin,
+          password: loginPassword,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setLoginMessage("Login successful!");
+      } else {
+        setLoginMessage(data.message || "Login failed!");
+      }
+    } catch (error) {
+      setLoginMessage("An error occurred. Please try again.");
     }
   };
 
   return (
     <>
+      {/* Sign-Up Form */}
       <div className="form-container sign-up-container">
         <form onSubmit={handleSignup}>
           <h1>Create Account</h1>
@@ -77,9 +100,9 @@ const FormContainer = () => {
           />
           <input
             type="text"
-            placeholder="UserName"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+            value={usernameSignup}
+            onChange={(e) => setUsernameSignup(e.target.value)}
             required
           />
           <input
@@ -103,11 +126,20 @@ const FormContainer = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-          {message && <p>{message}</p>}{" "}
-          {/* Display the success or error message here */}
+          {signupMessages.length > 0 && (
+            <div>
+              {signupMessages.map((msg, index) => (
+                <p key={index} style={{ color: "red" }}>
+                  {msg}
+                </p>
+              ))}
+            </div>
+          )}
           <button type="submit">Sign Up</button>
         </form>
       </div>
+
+      {/* Sign-In Form */}
       <div className="form-container sign-in-container">
         <form onSubmit={handleLogin}>
           <h1>Sign in</h1>
@@ -115,19 +147,20 @@ const FormContainer = () => {
           <span>or use your account</span>
           <input
             type="text"
-            placeholder="UserName"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+            value={usernameLogin}
+            onChange={(e) => setUsernameLogin(e.target.value)}
             required
           />
           <input
             type="password"
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={loginPassword}
+            onChange={(e) => setLoginPassword(e.target.value)}
             required
           />
-          <a href="\forget">Forgot your password?</a>
+          <a href="/forget">Forgot your password?</a>
+          {loginMessage && <p>{loginMessage}</p>}
           <button type="submit">Sign In</button>
         </form>
       </div>
