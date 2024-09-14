@@ -27,8 +27,8 @@ function Navbar() {
         <ul>
           <li><a href="./login">Login</a></li>
           <li><a href="#signup">Signup</a></li>
-          <li><a href="#aboutus">About Us</a></li>
-          <li><a href="#contactus">Contact Us</a></li>
+          <li><a href="./Aboutus">About Us</a></li>
+          <li><a href="./ContactPage">Contact Us</a></li>
         </ul>
       </div>
     </>
