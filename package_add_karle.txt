@@ -1,0 +1,4 @@
+**************inside backend**********
+
+npm install jsonwebtoken
+npm install multer 
