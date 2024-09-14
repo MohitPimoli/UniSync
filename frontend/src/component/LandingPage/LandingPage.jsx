@@ -19,7 +19,7 @@ function Landing() {
       <div className="post-container">
         <div className="post-header">
           <img
-            src="https://via.placeholder.com/50" /* Replace with your profile image URL */
+            src="https://i.postimg.cc/mDwYKVVF/yash.jpg" /* Replace with your profile image URL */
             alt="Profile"
             className="profile-pic"
           />

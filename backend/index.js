@@ -6,27 +6,29 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Connect to MongoDB
+const postRoutes = require('./postRoutes');
+app.use('/api', postRoutes);
+
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch(err => {
-        console.error('Kuch To gadbadh Hai', err);
+        console.error('Database connection error:', err);
         process.exit(1);
     });
 
-// Rate limiting middleware to prevent brute-force attacks
+
 const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 10, // Limit each IP to 10 requests per windowMs
+    windowMs: 15 * 60 * 1000,
+    max: 10,
     message: 'Too many login attempts from this IP, please try again after 15 minutes'
 });
 
-// Schema for user data
+
 const userSchema = new mongoose.Schema({
     Name: String,
     Username: String,
@@ -38,7 +40,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('Users', userSchema);
 
-// Nodemailer transport with environment variables for security
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -47,7 +48,18 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// POST /reset: Password reset request
+const sendMail = async (mailOptions) => {
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(info);
+            }
+        });
+    });
+};
+
 app.post('/reset', [
     body('email').isEmail().withMessage('Invalid email format')
 ], async (req, res) => {
@@ -67,7 +79,7 @@ app.post('/reset', [
 
         const token = crypto.randomBytes(20).toString('hex');
         user.resetPasswordToken = bcrypt.hashSync(token, 10);
-        user.resetPasswordExpires = Date.now() + 600000;
+        user.resetPasswordExpires = Date.now() + 600000; // 10 minutes expiration
         await user.save();
 
         const resetLink = `http://localhost:3000/forget/${token}`;
@@ -79,20 +91,15 @@ app.post('/reset', [
             This link will expire in 10 minutes. If you did not request this, please ignore this email and your password will remain unchanged.`
         };
 
-        transporter.sendMail(mailOptions, (err, info) => {
-            if (err) {
-                console.error('Error sending email:', err);
-                return res.status(500).send({ message: 'Error sending reset email' });
-            }
-            res.status(200).send({ message: 'A reset link has been sent to your email address.' });
-        });
+        await sendMail(mailOptions);
+
+        res.status(200).send({ message: 'A reset link has been sent to your email address.' });
     } catch (err) {
         console.error('Error processing request:', err);
         res.status(500).send({ message: 'Server error. Please try again later.' });
     }
 });
 
-// POST /reset-password: Reset the password
 app.post('/reset-password', async (req, res) => {
     const { token, newPassword } = req.body;
 
@@ -114,11 +121,11 @@ app.post('/reset-password', async (req, res) => {
 
         res.status(200).send({ message: 'Your password has been successfully reset.' });
     } catch (err) {
+        console.error('Error resetting password:', err);
         res.status(500).send({ message: 'Server error. Please try again later.' });
     }
 });
 
-// POST /register: Register a new user with input validation
 app.post('/register', [
     body('email').isEmail().withMessage('Invalid email format'),
     body('name').notEmpty().withMessage('Name is required'),
@@ -142,14 +149,15 @@ app.post('/register', [
             Email: email,
             Pass: hashedPassword
         });
+
         await user.save();
         res.send({ message: 'Registration successful' });
     } catch (err) {
+        console.error('Error registering user:', err);
         res.status(500).send({ message: 'Server Side Error Occurred! Please Register Once Again' });
     }
 });
 
-// POST /login: User login with rate limiting
 app.post('/login', loginLimiter, async (req, res) => {
     const { username, password } = req.body;
 
@@ -157,24 +165,22 @@ app.post('/login', loginLimiter, async (req, res) => {
         const user = await User.findOne({ Username: username });
 
         if (!user) {
-            res.status(401).send({ message: 'Invalid username or password' });
-            return;
+            return res.status(401).send({ message: 'Invalid username or password' });
         }
 
         const isPasswordValid = bcrypt.compareSync(password, user.Pass);
 
         if (!isPasswordValid) {
-            res.status(401).send({ message: 'Invalid username or password' });
-            return;
+            return res.status(401).send({ message: 'Invalid username or password' });
         }
 
         res.status(200).send({ message: 'Login successful' });
     } catch (err) {
+        console.error('Error logging in:', err);
         res.status(500).send({ message: 'Error logging in' });
     }
 });
 
-// Server listening on port 5001
 app.listen(5001, () => {
     console.log('Server is running on port 5001');
 });
