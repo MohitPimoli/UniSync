@@ -2,37 +2,50 @@ import React, { useEffect, useState } from "react";
 import "./ConnectionReqs.css";
 import { Avatar } from "@mui/material";
 import { PersonAdd, Close } from "@mui/icons-material";
+import io from "socket.io-client";
+const socket = io("http://localhost:5001");
 
 const ConnectionRequests = () => {
   const [requests, setRequests] = useState([
     {
       id: 1,
-      name: "John Doe",
+      name: "Yash Garg",
       title: "Software Engineer",
-      avatar: "https://via.placeholder.com/150",
+      Avatar: "https://randomuser.me/api/portraits",
     },
     {
       id: 2,
-      name: "Jane Smith",
-      title: "Data Scientist",
-      avatar: "https://via.placeholder.com/150",
+      name: "Nikhil Bisht",
+      title: "Software Engineer",
+      Avatar: "https://randomuser.me/api/portraits",
     },
   ]);
 
-  // Simulate real-time connection requests
   useEffect(() => {
-    const interval = setInterval(() => {
-      const newRequest = {
-        id: requests.length + 1,
-        name: `User ${requests.length + 1}`,
-        title: "New Title",
-        avatar: "https://via.placeholder.com/150",
-      };
-      setRequests((prevRequests) => [...prevRequests, newRequest]);
-    }, 10000); // New request every 10 seconds
+    const fetchRequests = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5001/connection-requests"
+        );
+        const data = await response.json();
+        setRequests(data);
+      } catch (err) {
+        console.error("Failed to fetch requests:", err);
+      }
+    };
 
-    return () => clearInterval(interval);
-  }, [requests]);
+    fetchRequests();
+  }, []);
+
+  useEffect(() => {
+    socket.on("new-request", (newRequest) => {
+      setRequests((prevRequests) => [...prevRequests, newRequest]);
+    });
+
+    return () => {
+      socket.off("new-request");
+    };
+  }, []);
 
   return (
     <div className="container">
