@@ -1,12 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import './ConnectionReqs.css';
-import { Avatar } from '@mui/material';
-import { PersonAdd, Close } from '@mui/icons-material';
+import React, { useEffect, useState } from "react";
+import "./ConnectionReqs.css";
+import { Avatar } from "@mui/material";
+import { PersonAdd, Close } from "@mui/icons-material";
 
 const ConnectionRequests = () => {
   const [requests, setRequests] = useState([
-    { id: 1, name: 'John Doe', title: 'Software Engineer', avatar: 'https://via.placeholder.com/150' },
-    { id: 2, name: 'Jane Smith', title: 'Data Scientist', avatar: 'https://via.placeholder.com/150' },
+    {
+      id: 1,
+      name: "John Doe",
+      title: "Software Engineer",
+      avatar: "https://via.placeholder.com/150",
+    },
+    {
+      id: 2,
+      name: "Jane Smith",
+      title: "Data Scientist",
+      avatar: "https://via.placeholder.com/150",
+    },
   ]);
 
   // Simulate real-time connection requests
@@ -15,10 +25,10 @@ const ConnectionRequests = () => {
       const newRequest = {
         id: requests.length + 1,
         name: `User ${requests.length + 1}`,
-        title: 'New Title',
-        avatar: 'https://via.placeholder.com/150',
+        title: "New Title",
+        avatar: "https://via.placeholder.com/150",
       };
-      setRequests(prevRequests => [...prevRequests, newRequest]);
+      setRequests((prevRequests) => [...prevRequests, newRequest]);
     }, 10000); // New request every 10 seconds
 
     return () => clearInterval(interval);
@@ -31,20 +41,20 @@ const ConnectionRequests = () => {
       <div className="cards-container">
         {requests.map((request) => (
           <div className="card" key={request.id}>
-            <div className='card-material'>
-            <Avatar src={request.avatar} className="avatar" />
-            <div className="card-info">
-              <h3 className="card-name">{request.name}</h3>
-              <p className="card-title">{request.title}</p>
-            </div>
-            <div className="card-actions">
-              <button className="accept-btn">
-                <PersonAdd fontSize="small" /> Accept
-              </button>
-              <button className="ignore-btn">
-                <Close fontSize="small" /> Ignore
-              </button>
-            </div>
+            <div className="card-material">
+              <Avatar src={request.avatar} className="avatar" />
+              <div className="card-info">
+                <h3 className="card-name">{request.name}</h3>
+                <p className="card-title">{request.title}</p>
+              </div>
+              <div className="card-actions">
+                <button className="accept-btn">
+                  <PersonAdd fontSize="small" /> Accept
+                </button>
+                <button className="ignore-btn">
+                  <Close fontSize="small" /> Ignore
+                </button>
+              </div>
             </div>
           </div>
         ))}

@@ -40,7 +40,7 @@ const FormContainer = () => {
           name,
           username: usernameSignup,
           email,
-          CnfPassword: password, // Ensure this matches the backend
+          CnfPassword: password,
         }),
       });
 
@@ -49,7 +49,7 @@ const FormContainer = () => {
         setSignupMessages(["Registration successful!"]);
         setTimeout(() => {
           setSignupMessages([]);
-          document.getElementById("signIn").click(); // Redirect to sign-in form
+          document.getElementById("signIn").click();
         }, 1500);
       } else {
         const errorMessages = data.errors
@@ -64,7 +64,6 @@ const FormContainer = () => {
     }
   };
 
-  // Login Handler
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginMessage("");
@@ -84,12 +83,13 @@ const FormContainer = () => {
 
       const data = await response.json();
       if (response.ok) {
+        localStorage.setItem("authToken", data.token);
         setLoginMessage("Login successful!");
         setTimeout(() => {
           navigate("/");
         }, 1500);
       } else {
-        setLoginMessage(data.message || "Login failed!");
+        setLoginMessage("Login failed!");
       }
     } catch (error) {
       setLoginMessage("An error occurred. Please try again.");
@@ -100,7 +100,7 @@ const FormContainer = () => {
 
   return (
     <>
-      {/* Sign-Up Form */}
+      {}
       <div className="form-container sign-up-container">
         <form onSubmit={handleSignup}>
           <h1>Create Account</h1>
@@ -156,7 +156,7 @@ const FormContainer = () => {
         </form>
       </div>
 
-      {/* Sign-In Form */}
+      {}
       <div className="form-container sign-in-container">
         <form onSubmit={handleLogin}>
           <h1>Sign in</h1>

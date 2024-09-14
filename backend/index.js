@@ -7,13 +7,11 @@ const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
 require('dotenv').config();
-
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET
 const app = express();
 app.use(express.json());
 app.use(cors());
-
-const postRoutes = require('./postRoutes');
-app.use('/api', postRoutes);
 
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch(err => {
@@ -37,8 +35,29 @@ const userSchema = new mongoose.Schema({
     resetPasswordToken: String,
     resetPasswordExpires: Date
 });
+const postSchema = new mongoose.Schema({
+    userId: mongoose.Schema.Types.ObjectId,
+    content: String,
+    media: String,
+    createdAt: { type: Date, default: Date.now }
+});
 
 const User = mongoose.model('Users', userSchema);
+const Post = mongoose.model('Posts', postSchema);
+
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401);
+
+    jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
+        if (err) return res.sendStatus(403);
+
+        req.user = user;
+        next();
+    });
+};
 
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -173,11 +192,45 @@ app.post('/login', loginLimiter, async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).send({ message: 'Invalid username or password' });
         }
+        const token = jwt.sign(
+            { userId: user._id, username: user.Username },
+            JWT_SECRET,
+            { expiresIn: '1h' } // Token expiration time
+        );
 
-        res.status(200).send({ message: 'Login successful' });
+        res.status(200).send({ message: 'Login successful', token });
     } catch (err) {
         console.error('Error logging in:', err);
         res.status(500).send({ message: 'Error logging in' });
+    }
+});
+
+app.post('/create-post', authenticateToken, async (req, res) => {
+    const { content, media } = req.body;
+    const userId = req.user.id;
+
+    try {
+        const post = new Post({
+            userId,
+            content,
+            media
+        });
+
+        await post.save();
+        res.status(200).send({ message: 'Post created successfully' });
+    } catch (err) {
+        console.error('Error creating post:', err);
+        res.status(500).send({ message: 'Server error. Please try again later.' });
+    }
+});
+
+app.get('/posts', async (req, res) => {
+    try {
+        const posts = await Post.find().populate('userId', 'Name Username');
+        res.status(200).send(posts);
+    } catch (err) {
+        console.error('Error fetching posts:', err);
+        res.status(500).send({ message: 'Server error. Please try again later.' });
     }
 });
 
