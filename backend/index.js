@@ -7,11 +7,18 @@ const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
 require('dotenv').config();
+
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET;
+
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+const http = require('http');
+const socketIo = require('socket.io');
+const server = http.createServer(app);
+const io = socketIo(server);
 
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch(err => {
@@ -19,31 +26,42 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology
         process.exit(1);
     });
 
-
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 10,
     message: 'Too many login attempts from this IP, please try again after 15 minutes'
 });
 
-
 const userSchema = new mongoose.Schema({
-    Name: String,
-    Username: String,
-    Email: String,
-    Pass: String,
+    Name: { type: String, required: true },
+    Username: { type: String, required: true, unique: true },
+    Email: { type: String, required: true, unique: true },
+    Pass: { type: String, required: true },
     resetPasswordToken: String,
     resetPasswordExpires: Date
 });
 const postSchema = new mongoose.Schema({
-    userId: mongoose.Schema.Types.ObjectId,
-    content: String,
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    content: { type: String, required: true },
     media: String,
     createdAt: { type: Date, default: Date.now }
+});
+const connectionSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    connections: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    requests: [{
+        requesterId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        status: { type: String, enum: ['pending', 'accepted', 'rejected'] }
+    }]
 });
 
 const User = mongoose.model('Users', userSchema);
 const Post = mongoose.model('Posts', postSchema);
+const Connection = mongoose.model('Connection', connectionSchema);
 
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -58,6 +76,14 @@ const authenticateToken = (req, res, next) => {
         next();
     });
 };
+
+io.on("connection", (socket) => {
+    console.log("New client connected");
+
+    socket.on("disconnect", () => {
+        console.log("Client disconnected");
+    });
+});
 
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -195,7 +221,7 @@ app.post('/login', loginLimiter, async (req, res) => {
         const token = jwt.sign(
             { userId: user._id, username: user.Username },
             JWT_SECRET,
-            { expiresIn: '1h' } // Token expiration time
+            { expiresIn: '1h' }
         );
 
         res.status(200).send({ message: 'Login successful', token });
@@ -230,6 +256,68 @@ app.get('/posts', async (req, res) => {
         res.status(200).send(posts);
     } catch (err) {
         console.error('Error fetching posts:', err);
+        res.status(500).send({ message: 'Server error. Please try again later.' });
+    }
+});
+
+app.get('/user/:userId/posts', authenticateToken, async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).send({ message: 'Invalid user ID' });
+        }
+
+        const posts = await Post.find({ userId }).populate('userId', 'Name Username');
+
+        if (!posts.length) {
+            return res.status(404).send({ message: 'No posts found for this user' });
+        }
+
+        res.status(200).send(posts);
+    } catch (error) {
+        console.error('Error fetching user posts:', error);
+        res.status(500).send({ message: 'Server error. Please try again later.' });
+    }
+});
+
+app.get('/connection-requests', authenticateToken, async (req, res) => {
+    try {
+        const connection = await Connection.findOne({ userId: req.user.userId }).populate('requests.requesterId', 'Name Username');
+        if (!connection) {
+            return res.status(404).send({ message: 'No connection requests found' });
+        }
+        res.status(200).json(connection.requests);
+    } catch (err) {
+        console.error('Error fetching connection requests:', err);
+        res.status(500).send({ message: 'Server error. Please try again later.' });
+    }
+});
+
+app.post('/send-request', authenticateToken, async (req, res) => {
+    const { receiverId } = req.body;
+
+    try {
+        if (receiverId === req.user.userId) {
+            return res.status(400).send({ message: 'You cannot send a request to yourself' });
+        }
+
+        let connection = await Connection.findOne({ userId: receiverId });
+
+        if (!connection) {
+            connection = new Connection({
+                userId: receiverId,
+                requests: [{ requesterId: req.user.userId }]
+            });
+        } else {
+            connection.requests.push({ requesterId: req.user.userId });
+        }
+
+        await connection.save();
+        io.emit("new-request", { requesterId: req.user.userId });
+        res.status(200).send({ message: 'Connection request sent successfully' });
+    } catch (err) {
+        console.error('Error sending connection request:', err);
         res.status(500).send({ message: 'Server error. Please try again later.' });
     }
 });
