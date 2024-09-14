@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NavBar from './Navbar';
+import Navbar from "../Navbar/Navbar";
 import "./LandingPage.css";
 import { SlCalender } from "react-icons/sl";
 import { GrGallery } from "react-icons/gr";
@@ -15,7 +15,7 @@ function Landing() {
 
   return (
     <>
-      <NavBar />
+      <Navbar />
       <div className="post-container">
         <div className="post-header">
           <img
@@ -57,7 +57,6 @@ function Landing() {
             <button onClick={toggleModal} className="-btn">
               Upload
             </button>
-            
           </div>
         </div>
       )}

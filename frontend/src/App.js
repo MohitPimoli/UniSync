@@ -6,7 +6,6 @@ import Forget from './component/LoginPage/ForgetPassword'
 import ResetPassword from "./component/LoginPage/ResetPassword"
 import AboutUs from "./component/Aboutus/AboutUs"
 
-
 function App() {
   return (
     <div className="Pages">
