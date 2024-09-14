@@ -15,7 +15,7 @@ function Login() {
   };
 
   return (
-    <>
+    <div className="FullBody">
       <img
         style={{
           width: "762px",
@@ -37,7 +37,7 @@ function Login() {
           onSignUpClick={handleSignUpClick}
         />
       </div>
-    </>
+      </div>
   );
 }
 
