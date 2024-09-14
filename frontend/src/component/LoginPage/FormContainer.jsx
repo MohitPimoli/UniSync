@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SocialContainer from "./SocialContainer";
 
 const FormContainer = () => {
@@ -7,19 +8,25 @@ const FormContainer = () => {
   const [usernameSignup, setUsernameSignup] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [CnfPassword, setConfirmPassword] = useState("");
-  const [signupMessages, setSignupMessages] = useState([]); // Array for signup messages
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [signupMessages, setSignupMessages] = useState([]);
+  const [isSignupSubmitting, setIsSignupSubmitting] = useState(false);
 
   // State for Login
   const [usernameLogin, setUsernameLogin] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const [loginMessage, setLoginMessage] = useState(""); // State for login message
-
+  const [loginMessage, setLoginMessage] = useState("");
+  const [isLoginSubmitting, setIsLoginSubmitting] = useState(false);
+  const navigate = useNavigate();
   // Signup Handler
   const handleSignup = async (e) => {
     e.preventDefault();
-    if (password !== CnfPassword) {
+    setSignupMessages([]);
+    setIsSignupSubmitting(true);
+
+    if (password !== confirmPassword) {
       setSignupMessages(["Passwords do not match!"]);
+      setIsSignupSubmitting(false);
       return;
     }
 
@@ -33,7 +40,7 @@ const FormContainer = () => {
           name,
           username: usernameSignup,
           email,
-          CnfPassword,
+          CnfPassword: password, // Ensure this matches the backend
         }),
       });
 
@@ -45,7 +52,6 @@ const FormContainer = () => {
           document.getElementById("signIn").click(); // Redirect to sign-in form
         }, 1500);
       } else {
-        // If there are validation errors, display them
         const errorMessages = data.errors
           ? data.errors.map((err) => err.msg)
           : [data.message || "Registration failed!"];
@@ -53,12 +59,16 @@ const FormContainer = () => {
       }
     } catch (error) {
       setSignupMessages(["An error occurred. Please try again."]);
+    } finally {
+      setIsSignupSubmitting(false);
     }
   };
 
   // Login Handler
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoginMessage("");
+    setIsLoginSubmitting(true);
 
     try {
       const response = await fetch("http://localhost:5001/login", {
@@ -75,11 +85,16 @@ const FormContainer = () => {
       const data = await response.json();
       if (response.ok) {
         setLoginMessage("Login successful!");
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
       } else {
         setLoginMessage(data.message || "Login failed!");
       }
     } catch (error) {
       setLoginMessage("An error occurred. Please try again.");
+    } finally {
+      setIsLoginSubmitting(false);
     }
   };
 
@@ -122,7 +137,7 @@ const FormContainer = () => {
           <input
             type="password"
             placeholder="Confirm your Password"
-            value={CnfPassword}
+            value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
@@ -135,7 +150,9 @@ const FormContainer = () => {
               ))}
             </div>
           )}
-          <button type="submit">Sign Up</button>
+          <button type="submit" disabled={isSignupSubmitting}>
+            {isSignupSubmitting ? "Signing Up..." : "Sign Up"}
+          </button>
         </form>
       </div>
 
@@ -161,7 +178,9 @@ const FormContainer = () => {
           />
           <a href="/forget">Forgot your password?</a>
           {loginMessage && <p>{loginMessage}</p>}
-          <button type="submit">Sign In</button>
+          <button type="submit" disabled={isLoginSubmitting}>
+            {isLoginSubmitting ? "Signing In..." : "Sign In"}
+          </button>
         </form>
       </div>
     </>

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./ResetPassword.css";
-import "./LoginPage";
 
 const ResetPassword = () => {
   const { token } = useParams(); // Retrieve token from URL
@@ -53,9 +52,8 @@ const ResetPassword = () => {
         // Handle errors based on status codes
         if (response.status === 400) {
           setError(result.message || "The link is invalid or has expired.");
-          if (response.status === 404)
-            // Handle 404 error
-            setError("User with this email does not exist");
+        } else if (response.status === 404) {
+          setError("User with this email does not exist.");
         } else {
           setError("Failed to reset password. Please try again later.");
         }
@@ -79,7 +77,11 @@ const ResetPassword = () => {
           onChange={handlePasswordChange}
           required
         />
-        <input type="submit" value="Reset Password" disabled={isSubmitting} />
+        <input
+          type="submit"
+          value={isSubmitting ? "Resetting..." : "Reset Password"}
+          disabled={isSubmitting}
+        />
       </form>
       {error && <div className="error">{error}</div>}
       {message && <div className="message">{message}</div>}

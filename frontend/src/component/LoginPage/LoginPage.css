@@ -1,9 +1,7 @@
 /* App.css */
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
 
- 
-
-.FullBody{
+.FullBody {
   background: #f6f5f7;
   display: flex;
   align-items: center;

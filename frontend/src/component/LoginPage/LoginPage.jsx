@@ -37,7 +37,7 @@ function Login() {
           onSignUpClick={handleSignUpClick}
         />
       </div>
-      </div>
+    </div>
   );
 }
 

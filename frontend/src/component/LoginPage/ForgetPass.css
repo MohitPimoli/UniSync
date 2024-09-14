@@ -1,6 +1,6 @@
-.ForgotBody{
+.ForgotBody {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: #f0f0f0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,6 +13,7 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
   width: 300px;
   text-align: center;
 }
@@ -34,7 +35,7 @@
 .forgot-password-container input[type="submit"] {
   width: 100%;
   padding: 10px;
-  background-color:  #ff4b2b;
+  background-color: #ff4b2b;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -42,7 +43,7 @@
 }
 
 .forgot-password-container input[type="submit"]:hover {
-  background-color:  #f65c41;
+  background-color: #f65c41;
 }
 
 /* Updated message styles */
@@ -64,6 +65,6 @@
 /* Error message style */
 .message.error {
   background-color: #f8d7da;
-  color: #721c24;
+  color: #c30013;
   border: 1px solid #f5c6cb;
 }
