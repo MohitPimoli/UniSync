@@ -14,7 +14,7 @@ function Navbar() {
         <div className="brand">BRAND</div>
         <ul className="nav-links">
           <li>
-            <a href="#connection-requests">Connection Requests</a>
+            <a href="./ConnectionReq">Connection Requests</a>
           </li>
           <li>
             <a href="#notifications">Notifications</a>
