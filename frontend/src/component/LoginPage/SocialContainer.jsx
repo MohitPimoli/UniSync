@@ -1,20 +1,20 @@
-import React from 'react';
+import React from "react";
 import { FaGoogle, FaLinkedinIn } from "react-icons/fa";
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 
 const SocialContainer = () => {
-  const navigate = useNavigate();  // Initialize the useNavigate hook
+  const navigate = useNavigate();
 
   const handleGoogleSuccess = (credentialResponse) => {
-    console.log('Google OAuth Success:', credentialResponse);
+    console.log("Google OAuth Success:", credentialResponse);
     // Send the credential to your backend for verification
     // Once verified, redirect to the landing page
-    navigate('/');  // Redirect to your landing page
+    navigate("/"); // Redirect to your landing page
   };
 
   const handleGoogleFailure = (error) => {
-    console.error('Google OAuth Failure:', error);
+    console.error("Google OAuth Failure:", error);
   };
 
   return (
@@ -25,14 +25,19 @@ const SocialContainer = () => {
           onSuccess={handleGoogleSuccess}
           onError={handleGoogleFailure}
           render={({ onClick }) => (
-            <a onClick={onClick} className="social">
+            <button onClick={onClick} className="social">
               <FaGoogle />
-            </a>
+            </button>
           )}
         />
 
         {/* LinkedIn Icon (You can integrate LinkedIn OAuth similarly) */}
-        <a href="https://www.linkedin.com/" className="social">
+        <a
+          href="https://www.linkedin.com/"
+          className="social"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <FaLinkedinIn />
         </a>
       </div>
