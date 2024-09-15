@@ -1,0 +1,142 @@
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 50vh;
+    background: #ff4b2b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+  }
+  
+  .hero-section h1 {
+    font-size: 3rem;
+    font-family: 'Pacifico', cursive;
+  }
+  
+  .flamingo {
+    background-size: contain;
+    height: 300px;
+    width: 300px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  /* Contact Info & Form Section */
+  .contact-details {
+    display: flex;
+    justify-content: space-between;
+    padding: 50px;
+    background-color: #f7f7f7;
+  }
+  
+  .meet-us,
+  .pitch-us {
+    width: 45%;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .meet-us h2, .pitch-us h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .meet-us p, .pitch-us p {
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 1.1rem;
+  }
+  
+  .meet-us p i {
+    margin-right: 10px;
+  }
+  
+  .pitch-us form input {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    margin-left: 5px;
+    font-size: 1rem;
+    padding: 5px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .pitch-us form input:focus {
+    outline: none;
+    border-color: #4ed6c0;
+  }
+  
+  .pitch-us form button {
+    background-color: #4ed6c0;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .pitch-us form button:hover {
+    background-color: #3fa9f5;
+  }
+  
+  /* Make it responsive */
+  @media screen and (max-width: 768px) {
+    /* Adjust hero section font size and flamingo size */
+    .hero-section h1 {
+      font-size: 2.5rem;
+    }
+    
+    .flamingo {
+      height: 200px;
+      width: 200px;
+    }
+  
+    /* Stack the contact info and form vertically */
+    .contact-details {
+      flex-direction: column;
+      padding: 20px;
+    }
+  
+    .meet-us,
+    .pitch-us {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    /* Further adjustments for mobile */
+    .hero-section h1 {
+      font-size: 2rem;
+    }
+  
+    .flamingo {
+      height: 150px;
+      width: 150px;
+    }
+  
+    /* Smaller padding and font sizes */
+    .contact-details {
+      padding: 15px;
+    }
+  
+    .meet-us p, .pitch-us p {
+      font-size: 1rem;
+    }
+  
+    .pitch-us form input {
+      font-size: 0.9rem;
+    }
+  
+    .pitch-us form button {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+    }
+  }
+  
