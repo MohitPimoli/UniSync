@@ -37,16 +37,16 @@ function Navbar() {
         </button>
         <ul>
           <li>
-            <a href="./login">Login</a>
+            <a href="/login">Login</a>
           </li>
           <li>
-            <a href="#signup">Signup</a>
+            <a href="/signup">Signup</a>
           </li>
           <li>
-            <a href="./Aboutus">About Us</a>
+            <a href="/Aboutus">About Us</a>
           </li>
           <li>
-            <a href="./ContactPage">Contact Us</a>
+            <a href="/ContactUs">Contact Us</a>
           </li>
         </ul>
       </div>
