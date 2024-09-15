@@ -6,7 +6,7 @@ import Forget from './component/LoginPage/ForgetPassword'
 import ResetPassword from "./component/LoginPage/ResetPassword"
 import AboutUs from "./component/Aboutus/AboutUs"
 import ConnectionRequests from './component/ConnectionReq/ConnectionReq';
-
+import ContactUs from './component/ContactUS/Contactus';
 function App() {
   return (
     <div className="Pages">
@@ -18,6 +18,7 @@ function App() {
           <Route path="/forget/:token" element={<ResetPassword />} />
           <Route path="/Aboutus" element={<AboutUs />} />
           <Route path="/ConnectionReq" element={<ConnectionRequests />} />
+          <Route path="/ContactUs" element={<ContactUs/>}/>
         </Routes>
       </BrowserRouter>
     </div>
