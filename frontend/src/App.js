@@ -7,7 +7,6 @@ import ResetPassword from "./component/LoginPage/ResetPassword"
 import AboutUs from "./component/Aboutus/AboutUs"
 import ConnectionRequests from './component/ConnectionReq/ConnectionReq';
 import ContactUs from './component/ContactUS/Contactus';
- import PostBox from './component/Posts/Posts';
 function App() {
   return (
     <div className="Pages">
@@ -20,7 +19,6 @@ function App() {
           <Route path="/Aboutus" element={<AboutUs />} />
           <Route path="/ConnectionReq" element={<ConnectionRequests />} />
           <Route path="/ContactUs" element={<ContactUs/>}/>
-          <Route path="/Posts" element={<PostBox/>}/>
         </Routes>
       </BrowserRouter>
     </div>

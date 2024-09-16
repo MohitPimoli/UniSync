@@ -1,78 +1,71 @@
 import React, { useEffect, useState } from "react";
-import "./ConnectionReqs.css";
+import Navbar from "../Navbar/Navbar";  // Assuming Navbar is in the Navbar folder
 import { Avatar } from "@mui/material";
 import { PersonAdd, Close } from "@mui/icons-material";
-import io from "socket.io-client";
-const socket = io("http://localhost:5001");
+import "./ConnectionReqs.css";
 
 const ConnectionRequests = () => {
   const [requests, setRequests] = useState([
     {
       id: 1,
-      name: "Yash Garg",
+      name: "John Doe",
       title: "Software Engineer",
-      Avatar: "https://randomuser.me/api/portraits",
+      avatar: "https://via.placeholder.com/150",
     },
     {
       id: 2,
-      name: "Nikhil Bisht",
-      title: "Software Engineer",
-      Avatar: "https://randomuser.me/api/portraits",
+      name: "Jane Smith",
+      title: "Data Scientist",
+      avatar: "https://via.placeholder.com/150",
     },
   ]);
 
+  // Simulate real-time connection requests
   useEffect(() => {
-    const fetchRequests = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:5001/connection-requests"
-        );
-        const data = await response.json();
-        setRequests(data);
-      } catch (err) {
-        console.error("Failed to fetch requests:", err);
-      }
-    };
-
-    fetchRequests();
-  }, []);
-
-  useEffect(() => {
-    socket.on("new-request", (newRequest) => {
+    const interval = setInterval(() => {
+      const newRequest = {
+        id: requests.length + 1,
+        name: `User ${requests.length + 1}`,
+        title: "New Title",
+        avatar: "https://via.placeholder.com/150",
+      };
       setRequests((prevRequests) => [...prevRequests, newRequest]);
-    });
+    }, 10000); // New request every 10 seconds
 
-    return () => {
-      socket.off("new-request");
-    };
-  }, []);
+    return () => clearInterval(interval);
+  }, [requests]);
 
   return (
-    <div className="container">
-      <h2 className="title">Connection Requests</h2>
+    <>
+      {/* Pass request count to Navbar */}
+      <Navbar requestCount={requests.length} />
 
-      <div className="cards-container">
-        {requests.map((request) => (
-          <div className="card" key={request.id}>
-            <div className="card-material">
-              <Avatar src={request.avatar} className="avatar" />
-              <div className="card-info">
-                <h3 className="card-name">{request.name}</h3>
-                <p className="card-title">{request.title}</p>
-              </div>
-              <div className="card-actions">
-                <button className="accept-btn">
-                  <PersonAdd fontSize="small" /> Accept
-                </button>
-                <button className="ignore-btn">
-                  <Close fontSize="small" /> Ignore
-                </button>
+      <div className="container">
+        <h2 className="title">Connection Requests</h2>
+
+        <div className="cards-container">
+          {requests.map((request) => (
+            <div className="card" key={request.id}>
+              <div className="card-material">
+                <Avatar src={request.avatar} className="avatar" />
+                <div className="card-info">
+                  <h3 className="card-name">{request.name}</h3>
+                  <p className="card-title">{request.title}</p>
+                </div>
+                <div className="card-actions">
+                  <button className="accept-btn">
+                    <PersonAdd fontSize="small" /> Accept
+                  </button>
+                  <button className="ignore-btn">
+                    <Close fontSize="small" /> Ignore
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
