@@ -9,7 +9,7 @@
 .title {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #0a66c2; /* LinkedIn blue */
+  color: #0a66c2;
   margin-bottom: 16px;
   text-align: center;
 }
@@ -17,29 +17,30 @@
 .cards-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px; /* Reduced gap between cards */
 }
 
 .card {
-  width: 100%; /* Full width */
+  width: 100%;
   background-color: white;
   border-radius: 8px;
-  padding: 20px;
+  padding: 5px 12px; /* Reduced padding to make the card smaller */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  align-items: center; /* Align items vertically centered */
 }
 
-.card-header {
+.card-material {
   display: flex;
-  align-items: center;
+  flex-direction: row; /* Show elements in a row */
+  align-items: center; /* Vertically align content */
+  width: 100%;
 }
 
 .avatar {
-  width: 80px;
-  height: 80px;
-  margin-right: 16px;
+  width: 60px; /* Reduced size */
+  height: 60px; /* Reduced size */
+  margin-right: 12px; /* Reduced margin */
 }
 
 .card-info {
@@ -47,32 +48,30 @@
 }
 
 .card-name {
-  font-size: 1.4rem;
+  font-size: 1.2rem; /* Slightly smaller font size */
   font-weight: bold;
   margin: 0;
 }
 
 .card-title {
-  font-size: 1rem;
+  font-size: 0.9rem; /* Slightly smaller font size */
   color: #555;
   margin: 0;
 }
 
 .card-actions {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  gap: 8px; /* Space between buttons */
 }
 
-.accept-btn,
-.ignore-btn {
-  padding: 12px 24px;
-  border-radius: 8px;
+.accept-btn, .ignore-btn {
+  padding: 8px 16px; /* Reduced padding */
+  border-radius: 6px; /* Slightly smaller border radius */
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 1rem;
+  gap: 6px; /* Reduced gap */
+  font-size: 0.9rem; /* Slightly smaller font size */
 }
 
 .accept-btn {
