@@ -11,7 +11,8 @@ function Navbar({requestCount}) {
   return (
     <>
       <nav className="navbar">
-        <div className="brand">BRAND</div>
+        <div className="brand">
+          <a href="./">BRAND</a></div>
         <ul className="nav-links">
           <li>
             <a href="./ConnectionReq">Connection Requests {requestCount > 0 && `(${requestCount})`}</a>
