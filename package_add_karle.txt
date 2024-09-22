@@ -4,13 +4,24 @@ npm install jsonwebtoken
 npm install multer 
 npm install socket.io
 
+//new npm install axios
+//new npm install helmet
+//NEW npm install google-auth-library
+
+
 
 ******inside Frontend*****
 npm install @mui/material @emotion/react @emotion/styled
 npm install @mui/icons-material
 npm install react-draggable
-npm install @react-oauth/google
-npm install react-emoji-picker
 
+npm install react-emoji-picker
 npm install socket.io
 npm install socket.io-client
+
+npm install @react-oauth/google
+npm install gapi-script
+
+//new npm install axios
+//new npm install gapi-script
+//new npm install jwt-decode

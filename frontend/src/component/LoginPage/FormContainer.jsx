@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+// src/component/LoginPage/FormContainer.jsx
+
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Ensure axios is imported
 import SocialContainer from "./SocialContainer";
+import { AuthContext } from "../../context/AuthContext";
 
 const FormContainer = () => {
   // State for Signup
@@ -17,7 +21,10 @@ const FormContainer = () => {
   const [loginPassword, setLoginPassword] = useState("");
   const [loginMessage, setLoginMessage] = useState("");
   const [isLoginSubmitting, setIsLoginSubmitting] = useState(false);
+
+  const { login } = useContext(AuthContext); // Access login function from AuthContext
   const navigate = useNavigate();
+
   // Signup Handler
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -31,68 +38,81 @@ const FormContainer = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5001/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          username: usernameSignup,
-          email,
-          CnfPassword: password,
-        }),
+      const response = await axios.post("http://localhost:5001/register", {
+        name,
+        username: usernameSignup,
+        email,
+        CnfPassword: password,
       });
 
-      const data = await response.json();
-      if (response.ok) {
+      if (response.status === 201 || response.status === 200) {
+        // Adjust based on backend response
         setSignupMessages(["Registration successful!"]);
         setTimeout(() => {
           setSignupMessages([]);
-          document.getElementById("signIn").click();
+          // Ensure an element with id="signIn" exists to switch to sign-in form
+          const signInButton = document.getElementById("signIn");
+          if (signInButton) {
+            signInButton.click();
+          }
         }, 1500);
       } else {
-        const errorMessages = data.errors
-          ? data.errors.map((err) => err.msg)
-          : [data.message || "Registration failed!"];
+        const errorMessages = response.data.errors
+          ? response.data.errors.map((err) => err.msg)
+          : [response.data.message || "Registration failed!"];
         setSignupMessages(errorMessages);
       }
     } catch (error) {
-      setSignupMessages(["An error occurred. Please try again."]);
+      if (error.response && error.response.data && error.response.data.errors) {
+        const errorMessages = error.response.data.errors.map((err) => err.msg);
+        setSignupMessages(errorMessages);
+      } else if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setSignupMessages([error.response.data.message]);
+      } else {
+        setSignupMessages(["An error occurred. Please try again."]);
+      }
     } finally {
       setIsSignupSubmitting(false);
     }
   };
 
+  // Login Handler
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginMessage("");
     setIsLoginSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:5001/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: usernameLogin,
-          password: loginPassword,
-        }),
+      const response = await axios.post("http://localhost:5001/login", {
+        username: usernameLogin,
+        password: loginPassword,
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem("authToken", data.token);
+      if (response.status === 200) {
+        login(response.data.token); // Use AuthContext's login function
+
         setLoginMessage("Login successful!");
         setTimeout(() => {
-          navigate("/");
+          navigate("/"); // Redirect to home page after successful login
         }, 1500);
       } else {
-        setLoginMessage("Login failed!");
+        const errorMsg = response.data.message || "Login failed!";
+        setLoginMessage(errorMsg);
       }
     } catch (error) {
-      setLoginMessage("An error occurred. Please try again.");
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setLoginMessage(error.response.data.message);
+      } else {
+        setLoginMessage("An error occurred. Please try again.");
+      }
     } finally {
       setIsLoginSubmitting(false);
     }
@@ -100,11 +120,11 @@ const FormContainer = () => {
 
   return (
     <>
-      {}
+      {/* Signup Container */}
       <div className="form-container sign-up-container">
         <form onSubmit={handleSignup}>
           <h1>Create Account</h1>
-          <SocialContainer />
+          <SocialContainer /> {/* Google OAuth Buttons */}
           <span>or use your email for registration</span>
           <input
             type="text"
@@ -156,12 +176,10 @@ const FormContainer = () => {
         </form>
       </div>
 
-      {}
+      {/* Login Container */}
       <div className="form-container sign-in-container">
         <form onSubmit={handleLogin}>
           <h1>Sign in</h1>
-          <SocialContainer />
-          <span>or use your account</span>
           <input
             type="text"
             placeholder="Username"
@@ -177,6 +195,8 @@ const FormContainer = () => {
             required
           />
           <a href="/forget">Forgot your password?</a>
+          <span>---------- OR CONNECT WITH ----------</span>
+          <SocialContainer /> {/* Google OAuth Buttons */}
           {loginMessage && <p>{loginMessage}</p>}
           <button type="submit" disabled={isLoginSubmitting}>
             {isLoginSubmitting ? "Signing In..." : "Sign In"}

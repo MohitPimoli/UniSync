@@ -1,36 +1,71 @@
 import React, { useState, useRef } from "react";
 import "./CreateNewPost.css";
+import { AuthContext } from "../../context/AuthContext";
 import { SlCalender } from "react-icons/sl";
 import { GrGallery } from "react-icons/gr";
 import { RiArticleLine } from "react-icons/ri";
+import axios from "axios";
+import { useContext } from "react";
 
-const CreatePostPage = ({ closePost }) => {
+const CreateNewPost = ({ closePost }) => {
   const [postText, setPostText] = useState("");
-  const [mediaFile, setMediaFile] = useState(null); // State to store the selected media file
-  const fileInputRef = useRef(null); // Ref to trigger the file input programmatically
+  const [mediaFile, setMediaFile] = useState(null);
+  const fileInputRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+  const { token } = useContext(AuthContext);
 
-  // Handle text change in the post textarea
   const handlePostChange = (e) => {
     setPostText(e.target.value);
   };
 
-  // Handle post submit
-  const handlePostSubmit = () => {
-    // Submit post logic (include media if any)
-    console.log("Post submitted:", postText, mediaFile);
-    closePost(); // Close the modal after submitting the post
-  };
-
-  // Trigger file input when "Media" is clicked
   const handleMediaClick = () => {
-    fileInputRef.current.click(); // Open the file dialog
+    fileInputRef.current.click();
   };
 
-  // Handle file change when user selects media
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       setMediaFile(file);
+    }
+  };
+
+  const handlePostSubmit = async () => {
+    if (!postText && !mediaFile) {
+      setError("Please add some text or select a media file.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("content", postText);
+      if (mediaFile) {
+        formData.append("media", mediaFile);
+      }
+      const response = await axios.post(
+        "http://localhost:5001/create-post",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Post submitted successfully:", response.data);
+      closePost();
+    } catch (err) {
+      console.error("Error submitting post:", err);
+      setError(
+        err.response?.data?.message ||
+          "An error occurred while submitting the post."
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -46,13 +81,12 @@ const CreatePostPage = ({ closePost }) => {
         <div className="create-post-content">
           <div className="user-info">
             <img
-              src="https://i.postimg.cc/mDwYKVVF/yash.jpg" /* Profile image URL */
+              src="https://i.postimg.cc/mDwYKVVF/yash.jpg"
               alt="User"
               className="profile-pic-modal"
             />
             <div className="user-details">
               <p className="username">Name of User</p>
-              
             </div>
             <p className="visibility">Public</p>
           </div>
@@ -84,23 +118,24 @@ const CreatePostPage = ({ closePost }) => {
             </div>
           </div>
 
-          {/* Hidden file input for media selection */}
+          {}
           <input
             type="file"
             ref={fileInputRef}
             style={{ display: "none" }}
             onChange={handleFileChange}
-            accept="image/*,video/*" // Limit to images and videos (optional)
+            accept="image/*,video/*"
           />
         </div>
+        {error && <p className="error-message">{error}</p>}
 
         <div className="create-post-footer">
           <button
             className="post-btn"
             onClick={handlePostSubmit}
-            disabled={!postText && !mediaFile} // Disable button if no text or media
+            disabled={isSubmitting || (!postText && !mediaFile)}
           >
-            Post
+            {isSubmitting ? "Posting..." : "Post"}
           </button>
         </div>
       </div>
@@ -108,4 +143,4 @@ const CreatePostPage = ({ closePost }) => {
   );
 };
 
-export default CreatePostPage;
+export default CreateNewPost;

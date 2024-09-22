@@ -6,7 +6,10 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
+const helmet = require('helmet');
+const { OAuth2Client } = require('google-auth-library');
 require('dotenv').config();
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -15,10 +18,55 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use('/uploads', express.static('uploads'));
+
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "trusted-scripts.com"],
+        styleSrc: ["'self'", "trusted-styles.com"],
+        imgSrc: ["'self'", "data:", "trusted-images.com"],
+        // Add other directives as needed
+    }
+}));
+
 const http = require('http');
 const socketIo = require('socket.io');
 const server = http.createServer(app);
 const io = socketIo(server);
+
+const multer = require('multer');
+const path = require('path');
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    }
+});
+
+
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|mp4|mov|avi/;
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (allowedTypes.test(ext)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Unsupported file type'), false);
+    }
+};
+
+
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+    limits: { fileSize: 10 * 1024 * 1024 }
+});
 
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch(err => {
@@ -203,6 +251,60 @@ app.post('/register', [
     }
 });
 
+app.post('/google-login', async (req, res) => {
+    const { token } = req.body;
+
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        const googleId = payload['sub'];
+        const email = payload['email'];
+        const name = payload['name'];
+
+        let user = await User.findOne({ Email: email });
+
+        if (!user) {
+            // Generate a default password
+            const defaultPassword = crypto.randomBytes(4).toString('hex'); // Generate a random password
+            const hashedPassword = bcrypt.hashSync(defaultPassword, 10);
+
+            // Create a new user with the default password
+            user = new User({
+                Name: name,
+                Username: googleId,
+                Email: email,
+                Pass: hashedPassword,
+            });
+            await user.save();
+
+            // Send the default password to the user's email
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'Welcome! Your Account Details',
+                text: `Welcome, ${name}! Your account has been created. Here is your default password: ${defaultPassword}. Please change it after logging in.`,
+            };
+
+            await sendMail(mailOptions);
+        }
+
+        // Generate JWT token
+        const jwtToken = jwt.sign(
+            { userId: user._id, username: user.Username },
+            JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        res.status(200).send({ message: 'Login successful', token: jwtToken });
+    } catch (error) {
+        console.error('Error logging in with Google:', error);
+        res.status(500).send({ message: 'Server error. Please try again later.' });
+    }
+});
+
 app.post('/login', loginLimiter, async (req, res) => {
     const { username, password } = req.body;
 
@@ -231,24 +333,30 @@ app.post('/login', loginLimiter, async (req, res) => {
     }
 });
 
-app.post('/create-post', authenticateToken, async (req, res) => {
-    const { content, media } = req.body;
-    const userId = req.user.id;
+app.post('/create-post', authenticateToken, upload.single('media'), async (req, res) => {
+    const { content } = req.body;
+    const userId = req.user.userId;
 
     try {
+        let mediaUrl = null;
+        if (req.file) {
+            mediaUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+        }
+
         const post = new Post({
             userId,
             content,
-            media
+            media: mediaUrl
         });
 
         await post.save();
-        res.status(200).send({ message: 'Post created successfully' });
+        res.status(200).send({ message: 'Post created successfully', post });
     } catch (err) {
         console.error('Error creating post:', err);
         res.status(500).send({ message: 'Server error. Please try again later.' });
     }
 });
+
 
 app.get('/posts', async (req, res) => {
     try {
