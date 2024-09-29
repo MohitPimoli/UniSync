@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import CreatePostPage from "../CreatePost/CreateNewPost"; // Import the CreatePostPage component
+import QueryPage from "../CreateQuery/GenerateQuere"; // Import the QueryPage component
 import "./LandingPage.css";
 
-import { SlCalender } from "react-icons/sl";
+import { MdOutlineQuestionMark } from "react-icons/md";
 import { GrGallery } from "react-icons/gr";
 import { RiArticleLine } from "react-icons/ri";
 
 function Landing() {
   const [showPostForm, setShowPostForm] = useState(false);
+  const [showQueryForm, setShowQueryForm] = useState(false); // New state for Query form
 
   // Function to open/close the post modal
   const handlePostInputClick = () => {
@@ -17,6 +19,15 @@ function Landing() {
 
   const handleClosePostForm = () => {
     setShowPostForm(false);
+  };
+
+  // Function to open/close the query modal
+  const handleQueryClick = () => {
+    setShowQueryForm(true);
+  };
+
+  const handleCloseQueryForm = () => {
+    setShowQueryForm(false);
   };
 
   return (
@@ -41,9 +52,9 @@ function Landing() {
             <GrGallery />
             <span>Media</span>
           </div>
-          <div className="action-item">
-            <SlCalender />
-            <span>Event</span>
+          <div className="action-item" onClick={handleQueryClick}> {/* Open the Query modal */}
+            <MdOutlineQuestionMark />
+            <span>Query</span>
           </div>
           <div className="action-item">
             <RiArticleLine />
@@ -52,17 +63,17 @@ function Landing() {
         </div>
       </div>
 
+      {/* Show CreatePostPage when user clicks on the input */}
       {showPostForm && (
         <CreatePostPage closePost={handleClosePostForm} /> // Show modal when user clicks the input box
+      )}
+
+      {/* Show QueryPage when user clicks on the Query button */}
+      {showQueryForm && (
+        <QueryPage closeQuery={handleCloseQueryForm} /> // Show modal for queries
       )}
     </>
   );
 }
 
 export default Landing;
-
-
-
-
-
-

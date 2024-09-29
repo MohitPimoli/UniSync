@@ -5,8 +5,8 @@ npm install multer
 npm install socket.io
 
 //new npm install axios
-//new npm install helmet
-//NEW npm install google-auth-library
+ npm install helmet
+npm install google-auth-library
 
 
 
@@ -22,6 +22,6 @@ npm install socket.io-client
 npm install @react-oauth/google
 npm install gapi-script
 
-//new npm install axios
-//new npm install gapi-script
-//new npm install jwt-decode
+npm install axios
+npm install gapi-script
+npm install jwt-decode

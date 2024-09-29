@@ -1,11 +1,12 @@
 import React, { useState, useRef } from "react";
 import "./CreateNewPost.css";
 import { AuthContext } from "../../context/AuthContext";
-import { SlCalender } from "react-icons/sl";
 import { GrGallery } from "react-icons/gr";
 import { RiArticleLine } from "react-icons/ri";
+import { MdOutlineQuestionMark } from "react-icons/md";
 import axios from "axios";
 import { useContext } from "react";
+import QueryPage from "../CreateQuery/GenerateQuere"; // Import the QueryPage component
 
 const CreateNewPost = ({ closePost }) => {
   const [postText, setPostText] = useState("");
@@ -13,6 +14,7 @@ const CreateNewPost = ({ closePost }) => {
   const fileInputRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [showQueryPage, setShowQueryPage] = useState(false); // State to track Query page modal
   const { token } = useContext(AuthContext);
 
   const handlePostChange = (e) => {
@@ -69,6 +71,15 @@ const CreateNewPost = ({ closePost }) => {
     }
   };
 
+  // Handle query button click
+  const handleQueryClick = () => {
+    setShowQueryPage(true); // Open the query page modal
+  };
+
+  const handleCloseQueryPage = () => {
+    setShowQueryPage(false); // Close the query page modal
+  };
+
   return (
     <div className="create-post-overlay">
       <div className="create-post-modal">
@@ -108,9 +119,9 @@ const CreateNewPost = ({ closePost }) => {
               <GrGallery />
               <span>Media</span>
             </div>
-            <div className="action-item">
-              <SlCalender />
-              <span>Event</span>
+            <div className="action-item" onClick={handleQueryClick}>
+              <MdOutlineQuestionMark />
+              <span>Query</span>
             </div>
             <div className="action-item">
               <RiArticleLine />
@@ -118,7 +129,6 @@ const CreateNewPost = ({ closePost }) => {
             </div>
           </div>
 
-          {}
           <input
             type="file"
             ref={fileInputRef}
@@ -139,6 +149,9 @@ const CreateNewPost = ({ closePost }) => {
           </button>
         </div>
       </div>
+
+      {/* Show the QueryPage modal when the query button is clicked */}
+      {showQueryPage && <QueryPage closeQuery={handleCloseQueryPage} />}
     </div>
   );
 };
