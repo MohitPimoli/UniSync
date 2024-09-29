@@ -1,6 +1,6 @@
 import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import {BrowserRouter , Routes , Route} from "react-router-dom";
 import Home from './component/LandingPage/LandingPage';
 import Login from './component/LoginPage/LoginPage';
 import Forget from './component/LoginPage/ForgetPassword';
@@ -35,7 +35,6 @@ function App() {
                 <Route path="/Aboutus" element={<AboutUs />} />
                 <Route path="/ConnectionReq" element={<ConnectionRequests />} />
                 <Route path="/ContactUs" element={<ContactUs />} />
-
 
                 {/* Protected Route for CreatePostPage */}
                 <Route
