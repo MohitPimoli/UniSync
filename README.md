@@ -36,7 +36,7 @@ npm install
 node index.js
 ```
 ## Step 4.5 Setup MongoDB
-create a database `unisync`.
+Create a database `unisync`.
 
 ![image](https://github.com/user-attachments/assets/9bea1d34-f12d-4274-be35-bd6dc327b9a1)
 
