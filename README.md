@@ -1,5 +1,3 @@
-# UniSync
-
 ![image](https://github.com/user-attachments/assets/b5034438-be34-46aa-9cc3-71e5006675f9)
 
 
