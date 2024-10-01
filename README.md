@@ -1,6 +1,11 @@
 # UniSync
 
+![image](https://github.com/user-attachments/assets/b5034438-be34-46aa-9cc3-71e5006675f9)
+
+
 UniSync - Transforming Problems Into Solutions
+
+---
 
 # DO FOLLOW THESE STEP!
 
@@ -33,10 +38,9 @@ npm install
 node index.js
 ```
 ## Step 4.5 Setup MongoDB
-create a database `unisync` with a collection `users`.
+create a database `unisync`.
 
-![image](https://github.com/user-attachments/assets/2ccb5a59-4779-4fe7-9250-fc8ea6907e64)
-
+![image](https://github.com/user-attachments/assets/9bea1d34-f12d-4274-be35-bd6dc327b9a1)
 
 
 ## Step 5. Frontend Setup.
@@ -53,3 +57,4 @@ npm install
 ```shell
 npm start
 ```
+---
