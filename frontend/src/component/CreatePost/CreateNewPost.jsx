@@ -2,11 +2,12 @@ import React, { useState, useRef } from "react";
 import "./CreateNewPost.css";
 import { AuthContext } from "../../context/AuthContext";
 import { GrGallery } from "react-icons/gr";
-import { RiArticleLine } from "react-icons/ri";
+import { FaCode } from "react-icons/fa6";
 import { MdOutlineQuestionMark } from "react-icons/md";
 import axios from "axios";
 import { useContext } from "react";
-import QueryPage from "../CreateQuery/GenerateQuere"; // Import the QueryPage component
+import QueryPage from "../CreateQuery/GenerateQuere";
+import CodeArea from "../Code Area/Code_Area"; // Import the CodeArea component
 
 const CreateNewPost = ({ closePost }) => {
   const [postText, setPostText] = useState("");
@@ -14,7 +15,8 @@ const CreateNewPost = ({ closePost }) => {
   const fileInputRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  const [showQueryPage, setShowQueryPage] = useState(false); // State to track Query page modal
+  const [showQueryPage, setShowQueryPage] = useState(false);
+  const [showCodeArea, setShowCodeArea] = useState(false); // State to track CodeArea modal
   const { token } = useContext(AuthContext);
 
   const handlePostChange = (e) => {
@@ -71,13 +73,20 @@ const CreateNewPost = ({ closePost }) => {
     }
   };
 
-  // Handle query button click
   const handleQueryClick = () => {
-    setShowQueryPage(true); // Open the query page modal
+    setShowQueryPage(true);
   };
 
   const handleCloseQueryPage = () => {
-    setShowQueryPage(false); // Close the query page modal
+    setShowQueryPage(false);
+  };
+
+  const handleCodeClick = () => {
+    setShowCodeArea(true); // Open the CodeArea modal
+  };
+
+  const handleCloseCodeArea = () => {
+    setShowCodeArea(false); // Close the CodeArea modal
   };
 
   return (
@@ -123,9 +132,9 @@ const CreateNewPost = ({ closePost }) => {
               <MdOutlineQuestionMark />
               <span>Query</span>
             </div>
-            <div className="action-item">
-              <RiArticleLine />
-              <span>Write article</span>
+            <div className="action-item" onClick={handleCodeClick}>
+              <FaCode />
+              <span>Code</span>
             </div>
           </div>
 
@@ -150,8 +159,8 @@ const CreateNewPost = ({ closePost }) => {
         </div>
       </div>
 
-      {/* Show the QueryPage modal when the query button is clicked */}
       {showQueryPage && <QueryPage closeQuery={handleCloseQueryPage} />}
+      {showCodeArea && <CodeArea closeCode={handleCloseCodeArea} />} 
     </div>
   );
 };

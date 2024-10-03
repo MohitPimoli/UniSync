@@ -13,7 +13,7 @@ import ProtectedRoute from './component/Protected/ProtectedRoute';
 import CreateNewPost from './component/CreatePost/CreateNewPost.jsx';
 import ErrorBoundary from './component/ErrorBoundary.jsx';
 import { useContext } from 'react';
-
+import Post from './component/Code Area/Code_Area.jsx'
 function App() {
   const { token } = useContext(AuthContext); // Access token from AuthContext
 
@@ -35,7 +35,7 @@ function App() {
                 <Route path="/Aboutus" element={<AboutUs />} />
                 <Route path="/ConnectionReq" element={<ConnectionRequests />} />
                 <Route path="/ContactUs" element={<ContactUs />} />
-
+                <Route path="/Post" element={<Post />} />
                 {/* Protected Route for CreatePostPage */}
                 <Route
                   path="/create-post"

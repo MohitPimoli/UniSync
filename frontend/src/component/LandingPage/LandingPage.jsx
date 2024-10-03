@@ -6,7 +6,7 @@ import "./LandingPage.css";
 
 import { MdOutlineQuestionMark } from "react-icons/md";
 import { GrGallery } from "react-icons/gr";
-import { RiArticleLine } from "react-icons/ri";
+import { FaCode } from "react-icons/fa6";
 
 function Landing() {
   const [showPostForm, setShowPostForm] = useState(false);
@@ -57,7 +57,7 @@ function Landing() {
             <span>Query</span>
           </div>
           <div className="action-item">
-            <RiArticleLine />
+            <FaCode />
             <span>Write article</span>
           </div>
         </div>
