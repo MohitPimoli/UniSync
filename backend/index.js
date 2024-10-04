@@ -107,9 +107,31 @@ const connectionSchema = new mongoose.Schema({
     }]
 });
 
+const querySchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    content: {
+        type: String,
+        required: true
+    },
+    visibility: {
+        type: String,
+        enum: ['Public', 'Connections'],
+        default: 'Public'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
 const User = mongoose.model('Users', userSchema);
 const Post = mongoose.model('Posts', postSchema);
 const Connection = mongoose.model('Connection', connectionSchema);
+const Query = mongoose.model('Query', querySchema);
 
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -385,6 +407,29 @@ app.get('/user/:userId/posts', authenticateToken, async (req, res) => {
         res.status(200).send(posts);
     } catch (error) {
         console.error('Error fetching user posts:', error);
+        res.status(500).send({ message: 'Server error. Please try again later.' });
+    }
+});
+
+app.post('/create-query', authenticateToken, async (req, res) => {
+    const { content, visibility } = req.body;
+    const userId = req.user.userId;
+
+    if (!content) {
+        return res.status(400).send({ message: 'Query content is required' });
+    }
+
+    try {
+        const newQuery = new Query({
+            userId,
+            content,
+            visibility
+        });
+
+        await newQuery.save();
+        res.status(200).send({ message: 'Query submitted successfully', query: newQuery });
+    } catch (err) {
+        console.error('Error submitting query:', err);
         res.status(500).send({ message: 'Server error. Please try again later.' });
     }
 });

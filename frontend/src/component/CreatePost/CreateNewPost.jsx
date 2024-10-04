@@ -16,7 +16,7 @@ const CreateNewPost = ({ closePost }) => {
   const [error, setError] = useState(null);
   const [showQueryPage, setShowQueryPage] = useState(false); // State to track Query page modal
   const { token } = useContext(AuthContext);
-
+  console.log("TokenPost:", token); // Add this to check if the token is null
   const handlePostChange = (e) => {
     setPostText(e.target.value);
   };

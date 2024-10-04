@@ -9,7 +9,7 @@ const QueryPage = ({ closeQuery }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const { token } = useContext(AuthContext);
-
+  console.log("TokenQuery:", token); // Add this to check if the token is null
   const handleQueryChange = (e) => {
     setQueryText(e.target.value);
   };
@@ -37,7 +37,7 @@ const QueryPage = ({ closeQuery }) => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         }
       );
 
@@ -79,7 +79,7 @@ const QueryPage = ({ closeQuery }) => {
               onChange={handleVisibilityChange}
             >
               <option value="Public">Public</option>
-              <option value="Private">Private</option>
+              <option value="Connections">Connections</option>
             </select>
           </div>
 

@@ -1,6 +1,6 @@
 import './App.css';
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import {BrowserRouter , Routes , Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './component/LandingPage/LandingPage';
 import Login from './component/LoginPage/LoginPage';
 import Forget from './component/LoginPage/ForgetPassword';
@@ -11,6 +11,7 @@ import ContactUs from './component/ContactUS/Contactus';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import ProtectedRoute from './component/Protected/ProtectedRoute';
 import CreateNewPost from './component/CreatePost/CreateNewPost.jsx';
+import GenerateQuere from './component/CreateQuery/GenerateQuere';
 import ErrorBoundary from './component/ErrorBoundary.jsx';
 import { useContext } from 'react';
 
@@ -20,6 +21,10 @@ function App() {
   const closePost = () => {
     // Define your closePost function here
     console.log("Post closed"); // Example implementation
+  };
+  const closeQuery = () => {
+    // Define your closeQuery function here
+    console.log("Query closed"); // Example implementation
   };
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
@@ -36,12 +41,20 @@ function App() {
                 <Route path="/ConnectionReq" element={<ConnectionRequests />} />
                 <Route path="/ContactUs" element={<ContactUs />} />
 
-                {/* Protected Route for CreatePostPage */}
+                {/* Protected Route */}
                 <Route
                   path="/create-post"
                   element={
                     <ProtectedRoute>
                       <CreateNewPost closePost={closePost} token={token} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/create-query"
+                  element={
+                    <ProtectedRoute>
+                      <GenerateQuere closeQuery={closeQuery} token={token} />
                     </ProtectedRoute>
                   }
                 />

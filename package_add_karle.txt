@@ -4,9 +4,11 @@ npm install jsonwebtoken
 npm install multer 
 npm install socket.io
 
-//new npm install axios
- npm install helmet
+npm install axios
+npm install helmet
 npm install google-auth-library
+
+//New npm install express-validator
 
 
 
