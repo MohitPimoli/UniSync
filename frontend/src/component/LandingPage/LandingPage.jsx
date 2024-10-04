@@ -4,9 +4,9 @@ import CreatePostPage from "../CreatePost/CreateNewPost"; // Import the CreatePo
 import QueryPage from "../CreateQuery/GenerateQuere"; // Import the QueryPage component
 import "./LandingPage.css";
 
-import { MdOutlineQuestionMark } from "react-icons/md";
-import { GrGallery } from "react-icons/gr";
-import { RiArticleLine } from "react-icons/ri";
+// import { MdOutlineQuestionMark } from "react-icons/md";
+// import { GrGallery } from "react-icons/gr";
+// import { FaCode } from "react-icons/fa6";
 
 function Landing() {
   const [showPostForm, setShowPostForm] = useState(false);
@@ -22,9 +22,6 @@ function Landing() {
   };
 
   // Function to open/close the query modal
-  const handleQueryClick = () => {
-    setShowQueryForm(true);
-  };
 
   const handleCloseQueryForm = () => {
     setShowQueryForm(false);
@@ -47,18 +44,15 @@ function Landing() {
             onClick={handlePostInputClick} // Opens the post modal
           />
         </div>
-        <div className="post-actions">
-          <div className="action-item">
-            <GrGallery />
-            <span>Media</span>
+        <div className="Different">
+          <div className="POST">
+            Post
           </div>
-          <div className="action-item" onClick={handleQueryClick}> {/* Open the Query modal */}
-            <MdOutlineQuestionMark />
-            <span>Query</span>
+          <div className="Query_Post">
+            Query
           </div>
-          <div className="action-item">
-            <RiArticleLine />
-            <span>Write article</span>
+          <div className="Code_Post">
+            Code Area
           </div>
         </div>
       </div>
