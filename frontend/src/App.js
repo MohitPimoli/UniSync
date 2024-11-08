@@ -16,15 +16,14 @@ import ErrorBoundary from './component/ErrorBoundary.jsx';
 import { useContext } from 'react';
 import Post from './component/Code Area/Code_Area.jsx'
 function App() {
-  const { token } = useContext(AuthContext); // Access token from AuthContext
+  const { token } = useContext(AuthContext);
 
   const closePost = () => {
-    // Define your closePost function here
-    console.log("Post closed"); // Example implementation
+
+    console.log("Post closed");
   };
   const closeQuery = () => {
-    // Define your closeQuery function here
-    console.log("Query closed"); // Example implementation
+    console.log("Query closed");
   };
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>

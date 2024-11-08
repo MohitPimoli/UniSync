@@ -10,6 +10,9 @@ npm install google-auth-library
 
 //New npm install express-validator
 
+//New npm install winston-daily-rotate-file    >>> as of 07/11/2024
+//New npm install bunyan
+
 
 
 ******inside Frontend*****
@@ -27,3 +30,4 @@ npm install gapi-script
 npm install axios
 npm install gapi-script
 npm install jwt-decode
+

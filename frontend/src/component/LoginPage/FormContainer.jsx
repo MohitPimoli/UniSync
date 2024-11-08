@@ -1,5 +1,3 @@
-// src/component/LoginPage/FormContainer.jsx
-
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Ensure axios is imported
@@ -7,7 +5,6 @@ import SocialContainer from "./SocialContainer";
 import { AuthContext } from "../../context/AuthContext";
 
 const FormContainer = () => {
-  // State for Signup
   const [name, setName] = useState("");
   const [usernameSignup, setUsernameSignup] = useState("");
   const [email, setEmail] = useState("");
@@ -16,16 +13,14 @@ const FormContainer = () => {
   const [signupMessages, setSignupMessages] = useState([]);
   const [isSignupSubmitting, setIsSignupSubmitting] = useState(false);
 
-  // State for Login
   const [usernameLogin, setUsernameLogin] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginMessage, setLoginMessage] = useState("");
   const [isLoginSubmitting, setIsLoginSubmitting] = useState(false);
 
-  const { login } = useContext(AuthContext); // Access login function from AuthContext
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Signup Handler
   const handleSignup = async (e) => {
     e.preventDefault();
     setSignupMessages([]);
@@ -38,19 +33,17 @@ const FormContainer = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5001/register", {
+      const response = await axios.post("http://localhost:5001/auth/register", {
         name,
         username: usernameSignup,
         email,
-        CnfPassword: password,
+        confirmPassword,
       });
 
       if (response.status === 201 || response.status === 200) {
-        // Adjust based on backend response
         setSignupMessages(["Registration successful!"]);
         setTimeout(() => {
           setSignupMessages([]);
-          // Ensure an element with id="signIn" exists to switch to sign-in form
           const signInButton = document.getElementById("signIn");
           if (signInButton) {
             signInButton.click();
@@ -80,24 +73,23 @@ const FormContainer = () => {
     }
   };
 
-  // Login Handler
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginMessage("");
     setIsLoginSubmitting(true);
 
     try {
-      const response = await axios.post("http://localhost:5001/login", {
+      const response = await axios.post("http://localhost:5001/auth/login", {
         username: usernameLogin,
         password: loginPassword,
       });
 
       if (response.status === 200) {
-        login(response.data.token); // Use AuthContext's login function
+        login(response.data.token);
 
         setLoginMessage("Login successful!");
         setTimeout(() => {
-          navigate("/"); // Redirect to home page after successful login
+          navigate("/");
         }, 1500);
       } else {
         const errorMsg = response.data.message || "Login failed!";
