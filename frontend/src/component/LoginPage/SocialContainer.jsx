@@ -14,9 +14,12 @@ const SocialContainer = () => {
     console.log("Google OAuth Success:", credentialResponse);
     try {
       // Send the credential to your backend for verification
-      const response = await axios.post("http://localhost:5001/google-login", {
-        token: credentialResponse.credential,
-      });
+      const response = await axios.post(
+        "http://localhost:5001/auth/google-login",
+        {
+          token: credentialResponse.credential,
+        }
+      );
 
       if (response.status === 200) {
         // Assuming backend returns a JWT token

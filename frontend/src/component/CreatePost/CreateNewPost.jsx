@@ -2,12 +2,11 @@ import React, { useState, useRef } from "react";
 import "./CreateNewPost.css";
 import { AuthContext } from "../../context/AuthContext";
 import { GrGallery } from "react-icons/gr";
-import { FaCode } from "react-icons/fa6";
+import { RiArticleLine } from "react-icons/ri";
 import { MdOutlineQuestionMark } from "react-icons/md";
 import axios from "axios";
 import { useContext } from "react";
 import QueryPage from "../CreateQuery/GenerateQuere";
-import CodeArea from "../Code Area/Code_Area"; // Import the CodeArea component
 
 const CreateNewPost = ({ closePost }) => {
   const [postText, setPostText] = useState("");
@@ -16,9 +15,7 @@ const CreateNewPost = ({ closePost }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [showQueryPage, setShowQueryPage] = useState(false);
-  const [showCodeArea, setShowCodeArea] = useState(false); // State to track CodeArea modal
   const { token } = useContext(AuthContext);
-  console.log("TokenPost:", token); // Add this to check if the token is null
   const handlePostChange = (e) => {
     setPostText(e.target.value);
   };
@@ -81,14 +78,6 @@ const CreateNewPost = ({ closePost }) => {
     setShowQueryPage(false);
   };
 
-  const handleCodeClick = () => {
-    setShowCodeArea(true); // Open the CodeArea modal
-  };
-
-  const handleCloseCodeArea = () => {
-    setShowCodeArea(false); // Close the CodeArea modal
-  };
-
   return (
     <div className="create-post-overlay">
       <div className="create-post-modal">
@@ -106,9 +95,9 @@ const CreateNewPost = ({ closePost }) => {
               className="profile-pic-modal"
             />
             <div className="user-details">
-              <p className="username">Name of User</p>
+              <p className="username1">Name of User</p>
             </div>
-            <p className="visibility">Public</p>
+            <p className="visibility1">Public</p>
           </div>
           <textarea
             className="post-textarea"
@@ -132,9 +121,9 @@ const CreateNewPost = ({ closePost }) => {
               <MdOutlineQuestionMark />
               <span>Query</span>
             </div>
-            <div className="action-item" onClick={handleCodeClick}>
-              <FaCode />
-              <span>Code</span>
+            <div className="action-item">
+              <RiArticleLine />
+              <span>Write article</span>
             </div>
           </div>
 
@@ -159,8 +148,8 @@ const CreateNewPost = ({ closePost }) => {
         </div>
       </div>
 
+      {/* Show the QueryPage modal when the query button is clicked */}
       {showQueryPage && <QueryPage closeQuery={handleCloseQueryPage} />}
-      {showCodeArea && <CodeArea closeCode={handleCloseCodeArea} />} 
     </div>
   );
 };

@@ -31,13 +31,16 @@ const ResetPassword = () => {
     setIsSubmitting(true); // Disable the button after submission
 
     try {
-      const response = await fetch("http://localhost:5001/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token, newPassword }), // Send token and new password
-      });
+      const response = await fetch(
+        "http://localhost:5001/auth/reset-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token, newPassword }), // Send token and new password
+        }
+      );
 
       const result = await response.json();
 

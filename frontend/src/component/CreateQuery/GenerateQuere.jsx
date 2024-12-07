@@ -9,7 +9,6 @@ const QueryPage = ({ closeQuery }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const { token } = useContext(AuthContext);
-  console.log("TokenQuery:", token); // Add this to check if the token is null
   const handleQueryChange = (e) => {
     setQueryText(e.target.value);
   };
