@@ -7,6 +7,7 @@ import { MdOutlineQuestionMark } from "react-icons/md";
 import axios from "axios";
 import { useContext } from "react";
 import QueryPage from "../CreateQuery/GenerateQuere";
+import CodeArea from "../Code Area/Code_Area";
 
 const CreateNewPost = ({ closePost }) => {
   const [postText, setPostText] = useState("");
@@ -15,7 +16,9 @@ const CreateNewPost = ({ closePost }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [showQueryPage, setShowQueryPage] = useState(false);
+  const [showCodeArea, setShowCodeArea] = useState(false); // New state for CodeArea visibility
   const { token } = useContext(AuthContext);
+
   const handlePostChange = (e) => {
     setPostText(e.target.value);
   };
@@ -78,6 +81,14 @@ const CreateNewPost = ({ closePost }) => {
     setShowQueryPage(false);
   };
 
+  const handleCodeClick = () => {
+    setShowCodeArea(true);
+  };
+
+  const handleCloseCodeArea = () => {
+    setShowCodeArea(false);
+  };
+
   return (
     <div className="create-post-overlay">
       <div className="create-post-modal">
@@ -121,9 +132,9 @@ const CreateNewPost = ({ closePost }) => {
               <MdOutlineQuestionMark />
               <span>Query</span>
             </div>
-            <div className="action-item">
+            <div className="action-item" onClick={handleCodeClick}>
               <RiArticleLine />
-              <span>Write article</span>
+              <span>Write Code</span>
             </div>
           </div>
 
@@ -150,6 +161,9 @@ const CreateNewPost = ({ closePost }) => {
 
       {/* Show the QueryPage modal when the query button is clicked */}
       {showQueryPage && <QueryPage closeQuery={handleCloseQueryPage} />}
+
+      {/* Show the CodeArea modal when the "Write Code" button is clicked */}
+      {showCodeArea && <CodeArea closeCodeArea={handleCloseCodeArea} />}
     </div>
   );
 };
