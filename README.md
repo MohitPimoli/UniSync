@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/b5034438-be34-46aa-9cc3-71e5006675f9)
+![Webp,net-resizeimage_processed](https://github.com/user-attachments/assets/5e67b111-4376-4302-ba82-2b4652f462f1)
 
 UniSync - Transforming Problems Into Solutions
 
