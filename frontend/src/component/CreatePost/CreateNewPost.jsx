@@ -95,9 +95,9 @@ const CreateNewPost = ({ closePost }) => {
               className="profile-pic-modal"
             />
             <div className="user-details">
-              <p className="username">Name of User</p>
+              <p className="username1">Name of User</p>
             </div>
-            <p className="visibility">Public</p>
+            <p className="visibility1">Public</p>
           </div>
           <textarea
             className="post-textarea"
