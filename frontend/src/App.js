@@ -3,6 +3,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './component/LandingPage/LandingPage';
 import Login from './component/LoginPage/LoginPage';
+import LoadingScreen from './component/LoadingScrean/LoadingScreen';
 import Forget from './component/LoginPage/ForgetPassword';
 import ResetPassword from "./component/LoginPage/ResetPassword";
 import AboutUs from "./component/Aboutus/AboutUs";
@@ -16,7 +17,7 @@ import ErrorBoundary from './component/ErrorBoundary.jsx';
 import { useContext } from 'react';
 import Post from './component/Code Area/Code_Area.jsx'
 function App() {
-  const { token } = useContext(AuthContext);
+  const { token, isLoading } = useContext(AuthContext);
 
   const closePost = () => {
 
@@ -29,7 +30,7 @@ function App() {
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <BrowserRouter>
         <AuthProvider>
-          <ErrorBoundary> {/* Optional: Wrap with ErrorBoundary */}
+          <ErrorBoundary> {isLoading && <LoadingScreen />}
             <div className="Pages">
               <Routes>
                 <Route path="/" element={<Home />} />

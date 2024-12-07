@@ -18,16 +18,18 @@ const FormContainer = () => {
   const [loginMessage, setLoginMessage] = useState("");
   const [isLoginSubmitting, setIsLoginSubmitting] = useState(false);
 
-  const { login } = useContext(AuthContext);
+  const { login, isLoading, setLoading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setSignupMessages([]);
     setIsSignupSubmitting(true);
 
     if (password !== confirmPassword) {
       setSignupMessages(["Passwords do not match!"]);
+      setLoading(false);
       setIsSignupSubmitting(false);
       return;
     }
@@ -70,11 +72,13 @@ const FormContainer = () => {
       }
     } finally {
       setIsSignupSubmitting(false);
+      setLoading(false);
     }
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setLoginMessage("");
     setIsLoginSubmitting(true);
 
@@ -107,8 +111,16 @@ const FormContainer = () => {
       }
     } finally {
       setIsLoginSubmitting(false);
+      setLoading(false);
     }
   };
+  if (isLoading) {
+    return (
+      <div className="loading-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -8,10 +8,13 @@ export const AuthContext = createContext({
   token: null,
   login: (token) => {},
   logout: () => {},
+  isLoading: false,
+  setLoading: (state) => {},
 });
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
+  const [isLoading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
   const logoutTimeoutRef = useRef(null); // To store the timeout ID
 
@@ -67,7 +70,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider
+      value={{ token, login, logout, isLoading, setLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
