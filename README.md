@@ -33,7 +33,12 @@ npm install
 ```
 
 ```shell
-node index.js
+npm start
+```
+OR
+
+```shell
+node server.js
 ```
 ## Step 4.5 Setup MongoDB
 Create a database `unisync`.
