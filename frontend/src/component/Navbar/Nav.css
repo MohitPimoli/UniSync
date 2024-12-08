@@ -7,35 +7,17 @@
   background-color: #d95a44;
 }
 
-.brand a {
-  font-size: 24px;
-  font-weight: bold;
-  color: white;
-}
-
 .nav-links {
   list-style: none;
   display: flex;
   gap: 30px;
 }
 
-.nav-links li {
-  display: inline;
-  font-size: 34px;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: white;
-  font-weight: 500;
-  font-size: 20px;
-}
-
 .nav-links a:hover {
   text-decoration: underline;
 }
 
-.equals-btn {
+.profile-btn {
   background-color: transparent;
   border: none;
   font-size: 30px;
@@ -44,10 +26,27 @@
   font-weight: bold;
 }
 
-.equals-btn img {
-  width: 24px;
-  height: 24px;
+.profile-btn img {
+  width: 34px;
+  height: 34px;
   display: block;
+  border: none;
+}
+
+.nav-not img {
+  width: 34px;
+  height: 34px;
+  display: block;
+  border: none;
+  margin-top: 12px;
+}
+
+.nav-con img {
+  width: 34px;
+  height: 34px;
+  display: block;
+  border: none;
+  margin-top: 12px;
 }
 
 .sidebar {
