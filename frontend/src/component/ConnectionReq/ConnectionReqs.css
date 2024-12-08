@@ -1,9 +1,13 @@
 .container {
-  max-width: 100%;
+  max-width: 1200px; /* Sets a max width for larger screens */
+  margin: 0 auto; /* Centers the container */
   padding: 20px;
   background-color: #f3f4f6;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .title {
@@ -16,31 +20,49 @@
 
 .cards-container {
   display: flex;
-  flex-direction: column;
-  gap: 12px; /* Reduced gap between cards */
+  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Allows wrapping for smaller screens */
+}
+
+.left-section,
+.right-section {
+  flex: 1; /* Both sections take equal space */
+  min-width: 300px; /* Ensures sections don’t shrink too much */
+  max-width: 48%; /* Allows sections to expand proportionally */
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box; /* Includes padding in width calculations */
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 12px;
 }
 
 .card {
   width: 100%;
   background-color: white;
   border-radius: 8px;
-  padding: 5px 12px; /* Reduced padding to make the card smaller */
+  padding: 5px 12px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
-  align-items: center; /* Align items vertically centered */
+  align-items: center;
 }
 
 .card-material {
   display: flex;
-  flex-direction: row; /* Show elements in a row */
-  align-items: center; /* Vertically align content */
+  align-items: center;
   width: 100%;
 }
 
 .avatar {
-  width: 60px; /* Reduced size */
-  height: 60px; /* Reduced size */
-  margin-right: 12px; /* Reduced margin */
+  width: 60px;
+  height: 60px;
+  margin-right: 12px;
 }
 
 .card-info {
@@ -48,30 +70,31 @@
 }
 
 .card-name {
-  font-size: 1.2rem; /* Slightly smaller font size */
+  font-size: 1.2rem;
   font-weight: bold;
   margin: 0;
 }
 
 .card-title {
-  font-size: 0.9rem; /* Slightly smaller font size */
+  font-size: 0.9rem;
   color: #555;
   margin: 0;
 }
 
 .card-actions {
   display: flex;
-  gap: 8px; /* Space between buttons */
+  gap: 8px;
 }
 
-.accept-btn, .ignore-btn {
-  padding: 8px 16px; /* Reduced padding */
-  border-radius: 6px; /* Slightly smaller border radius */
+.accept-btn,
+.ignore-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px; /* Reduced gap */
-  font-size: 0.9rem; /* Slightly smaller font size */
+  gap: 6px;
+  font-size: 0.9rem;
 }
 
 .accept-btn {
@@ -84,4 +107,27 @@
   background-color: white;
   color: #555;
   border: 1px solid #ddd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cards-container {
+    flex-direction: column; /* Stack sections vertically on smaller screens */
+  }
+
+  .left-section,
+  .right-section {
+    max-width: 100%; /* Take full width on small screens */
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 90%; /* Expands to 90% of the screen width on larger screens */
+  }
+
+  .left-section,
+  .right-section {
+    max-width: 45%; /* Adjust sections for better spacing */
+  }
 }

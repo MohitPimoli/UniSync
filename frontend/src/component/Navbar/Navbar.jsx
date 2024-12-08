@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "./Nav.css"; // We'll define some basic styles in this CSS file.
 import logo from "../../Photo/logo_br.png";
-import hb from "../../Photo/hb.png";
+import profile from "../../Photo/user.png";
+import bell from "../../Photo/bell.png";
+import connection from "../../Photo/people.png";
 function Navbar({ requestCount }) {
   const [sidebar, setSidebar] = useState(false);
 
@@ -17,7 +19,6 @@ function Navbar({ requestCount }) {
             <img src={logo} alt="Unisync" />
           </a>
         </div>
-        
         <ul className="nav-links">
           <li>
             <a href="./ConnectionReq">
