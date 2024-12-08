@@ -18,7 +18,7 @@ function Navbar({requestCount}) {
             <a href="./ConnectionReq">Connection Requests {requestCount > 0 && `(${requestCount})`}</a>
           </li>
           <li>
-            <a href="#notifications">Notifications</a>
+            <a href="./Notification">Notifications</a>
           </li>
           <li>
             <a href="#page-updates">Page Updates</a>
