@@ -24,7 +24,7 @@ function Navbar({ requestCount }) {
             </a>
           </li>
           <li>
-            <a href="#notifications">Notifications</a>
+            <a href="./Notification">Notifications</a>
           </li>
           <li>
             <a href="#page-updates">Page Updates</a>

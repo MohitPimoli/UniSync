@@ -14,6 +14,7 @@ import ProtectedRoute from './component/Protected/ProtectedRoute';
 import CreateNewPost from './component/CreatePost/CreateNewPost.jsx';
 import GenerateQuere from './component/CreateQuery/GenerateQuere';
 import ErrorBoundary from './component/ErrorBoundary.jsx';
+import Notification from './component/Notification/Notification.jsx';
 import { useContext } from 'react';
 import Post from './component/CreateCode/CreateCode.jsx'
 function App() {
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/ConnectionReq" element={<ConnectionRequests />} />
                 <Route path="/ContactUs" element={<ContactUs />} />
                 <Route path="/Post" element={<Post />} />
+                <Route path="/Notification" element={<Notification/>} />
                 {/* Protected Route */}
                 <Route
                   path="/create-post"
