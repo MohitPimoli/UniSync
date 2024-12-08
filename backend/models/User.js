@@ -6,9 +6,10 @@ const userSchema = new mongoose.Schema({
     Email: { type: String, required: true, unique: true },
     Pass: { type: String, required: true },
     resetPasswordToken: String,
-    resetPasswordExpires: Date
+    resetPasswordExpires: Date,
+    profilePicture: { type: String, default: 'user.png' },
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 module.exports = User;

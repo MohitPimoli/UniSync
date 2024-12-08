@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import LoadingScreen from "../LoadingScrean/LoadingScreen";
 import Navbar from "../Navbar/Navbar";
 import CreatePostPage from "../CreatePost/CreateNewPost";
 import Post from "../Post/Post";
 import PostQuery from "../Post_Query/Post_Query";
 import PostCode from "../Post_Code/Post_Code";
 import "./LandingPage.css";
+import { AuthContext } from "../../context/AuthContext";
 
 function Landing() {
   const [activePage, setActivePage] = useState("Post"); // Default to "Post" page
   const [showPostForm, setShowPostForm] = useState(false);
+  const { user, isLoading, setLoading } = useContext(AuthContext);
 
   // Sample data for posts
   const posts = [
@@ -31,6 +34,13 @@ function Landing() {
       imageUrl: "https://via.placeholder.com/400", // Replace with actual image URL
     },
   ];
+  useEffect(() => {
+    console.log("User data:", user);
+    setLoading(!user); // Set loading state based on user availability
+  }, [user, setLoading]);
+
+  // Show loading screen if data is being fetched
+  if (isLoading) return <LoadingScreen />;
 
   const handlePostInputClick = () => {
     setShowPostForm(true);
@@ -46,7 +56,9 @@ function Landing() {
       <div className="post-container">
         <div className="post-header">
           <img
-            src="https://i.postimg.cc/mDwYKVVF/yash.jpg" /* Replace with your profile image URL */
+            src={
+              user?.photoUrl || "http://localhost:5001/uploads/user.png"
+            } /* Replace with your profile image URL */
             alt="Profile"
             className="profile-pic"
           />
