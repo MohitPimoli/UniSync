@@ -108,7 +108,7 @@ exports.googleLogin = async (req, res) => {
                 from: process.env.EMAIL_USER,
                 to: email,
                 subject: 'Welcome! Your Account Details',
-                text: `Welcome, ${name}! Your account has been created with a default password: ${defaultPassword}. Please change it after logging in.`,
+                html: ` <p>Dear ${name},</p> <p>Welcome to our platform! Your account has been successfully created. Here are your account details:</p> <p><strong>Username:</strong> ${email}</p> <p><strong>Temporary Password:</strong> ${defaultPassword}</p> <p>Please change your password after logging in for the first time.</p> <p>If you have any questions or need assistance, feel free to contact our support team.</p> <p>Best regards,<br>Your Company Name</p> `
             };
             await sendMail(mailOptions);
         }
@@ -139,12 +139,12 @@ exports.requestPasswordReset = [
             user.resetPasswordExpires = Date.now() + 600000;
             await user.save();
 
-            const resetLink = `http://localhost:3000/auth/reset/${token}`;
+            const resetLink = `http://localhost:3000/forget/${token}`;
             const mailOptions = {
                 from: process.env.EMAIL_USER,
                 to: user.Email,
                 subject: 'Password Reset Request',
-                text: `Click the following link to reset your password: ${resetLink} (expires in 10 minutes).`
+                html: ` <b>Dear ${user.Name},</b> <p>We received a request to reset your password. Click the link below to reset your password:</p> <p><a href="${resetLink}">Reset Password</a></p> <p>This link will expire in 10 minutes.</p> <strong>If you did not request a password reset, please ignore this email or contact support if you have any questions.</strong> <p>Best regards,<br><b>Unisync<b></br> `
             };
             await sendMail(mailOptions);
 

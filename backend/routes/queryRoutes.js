@@ -5,7 +5,7 @@ const authenticateUser = require('../middlewares/authenticate.js');
 const router = express.Router();
 
 router.post(
-    '/create',
+    '/CreateQuery',
     authenticateUser,
     [
         body('content').notEmpty().withMessage('Query content is required'),
@@ -19,7 +19,7 @@ router.get('/my-queries', authenticateUser, queryController.getUserQueries);
 router.get('/visibility/:visibility', authenticateUser, queryController.getQueriesByVisibility);
 
 router.put(
-    '/update',
+    '/updateQuery',
     authenticateUser,
     [
         body('queryId').isMongoId().withMessage('Invalid query ID'),
@@ -29,7 +29,7 @@ router.put(
 );
 
 router.delete(
-    '/delete/:queryId',
+    '/deleteQuery/:queryId',
     authenticateUser,
     [
         param('queryId').isMongoId().withMessage('Invalid query ID')

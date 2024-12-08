@@ -3,3 +3,6 @@
 .env.local
 /../../.DS_Store    
 /logs
+.vs
+/../../.vs
+/uploads

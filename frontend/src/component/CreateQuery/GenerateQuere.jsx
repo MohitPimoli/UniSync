@@ -28,7 +28,7 @@ const QueryPage = ({ closeQuery }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/create-query",
+        "http://localhost:5001/queries/CreateQuery",
         {
           content: queryText,
           visibility: visibility,
