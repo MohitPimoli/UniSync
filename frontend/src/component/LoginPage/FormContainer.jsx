@@ -51,11 +51,6 @@ const FormContainer = () => {
             signInButton.click();
           }
         }, 1500);
-      } else {
-        const errorMessages = response.data.errors
-          ? response.data.errors.map((err) => err.msg)
-          : [response.data.message || "Registration failed!"];
-        setSignupMessages(errorMessages);
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.errors) {
@@ -168,7 +163,14 @@ const FormContainer = () => {
           {signupMessages.length > 0 && (
             <div>
               {signupMessages.map((msg, index) => (
-                <p key={index} style={{ color: "red" }}>
+                <p
+                  key={index}
+                  className={
+                    msg.toLowerCase().includes("successful")
+                      ? "success"
+                      : "error"
+                  }
+                >
                   {msg}
                 </p>
               ))}
@@ -201,7 +203,17 @@ const FormContainer = () => {
           <a href="/forget">Forgot your password?</a>
           <span>---------- OR CONNECT WITH ----------</span>
           <SocialContainer /> {/* Google OAuth Buttons */}
-          {loginMessage && <p>{loginMessage}</p>}
+          {loginMessage && (
+            <p
+              className={
+                loginMessage.toLowerCase().includes("successful")
+                  ? "success"
+                  : "error"
+              }
+            >
+              {loginMessage}
+            </p>
+          )}
           <button type="submit" disabled={isLoginSubmitting}>
             {isLoginSubmitting ? "Signing In..." : "Sign In"}
           </button>

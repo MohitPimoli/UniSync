@@ -40,23 +40,35 @@ exports.register = [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        const { name, username, email, confirmPassword } = req.body;
-        console.log(confirmPassword)
-        console.log("hello")
 
+        const { name, username, email, confirmPassword } = req.body;
 
         try {
+            // Check if email or username already exists
+            const existingUser = await User.findOne({
+                $or: [{ Username: username }, { Email: email }]
+            });
+
+            if (existingUser) {
+                const errorMessage = existingUser.Username === username
+                    ? 'Username already exists'
+                    : 'Email already exists';
+                return res.status(400).json({ errors: [{ msg: errorMessage }] });
+            }
+
             const hashedPassword = bcrypt.hashSync(confirmPassword, 10);
             const user = new User({ Name: name, Username: username, Email: email, Pass: hashedPassword });
             await user.save();
+
             res.send({ message: 'Registration successful' });
-            console.log("Registration successful")
+            console.log("Registration successful");
         } catch (err) {
             console.error('Error registering user:', err);
             res.status(500).send({ message: 'Server error. Please try again.' });
         }
     }
 ];
+
 
 exports.login = async (req, res) => {
     const { username, password } = req.body;
