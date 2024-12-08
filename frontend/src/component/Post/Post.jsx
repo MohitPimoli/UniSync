@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Post.css";
+import { FaThumbsUp, FaRegComment, FaShareAlt, FaPaperPlane, FaSave } from "react-icons/fa"; // Import FontAwesome icons
 
 const Post = ({
   userName,
@@ -50,6 +51,11 @@ const Post = ({
     }
   };
 
+  // Handle save button click (if you want to add functionality)
+  const handleSaveClick = () => {
+    alert("Post saved!"); // Example functionality
+  };
+
   return (
     <div className="post-card12">
       {/* User Info Section */}
@@ -82,14 +88,20 @@ const Post = ({
       {/* Interaction Bar */}
       <div className="interaction-bar">
         <button onClick={handleLikeClick}>
-          {liked ? "Unlike" : "Like"} ({likes}){" "}
-          {/* Update button text and show count */}
+          <FaThumbsUp />  ({likes}) {/* Update button text and show count */}
         </button>
         <button onClick={handleCommentClick}>
-          Comment ({comments.length}) {/* Display comment count */}
+          <FaRegComment />  ({comments.length}) {/* Display comment count */}
         </button>
-        <button>Repost</button>
-        <button>Send</button>
+        <button>
+          <FaShareAlt /> 
+        </button>
+        <button>
+          <FaPaperPlane /> 
+        </button>
+        <button onClick={handleSaveClick} className="save-button">
+          <FaSave className="save-icon" /> {/* Save button with icon */}
+        </button>
       </div>
 
       {/* Comment Section */}

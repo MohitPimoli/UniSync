@@ -17,6 +17,7 @@ function Navbar({ requestCount }) {
             <img src={logo} alt="Unisync" />
           </a>
         </div>
+        
         <ul className="nav-links">
           <li>
             <a href="./ConnectionReq">

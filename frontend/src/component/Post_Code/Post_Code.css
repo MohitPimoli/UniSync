@@ -1,1 +1,209 @@
-/* Css of Post Code */
+/* General styling for the post card */
+.post-card {
+    width: 600px;
+  margin: 20px auto;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* User Info Section */
+  .user-info{
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+  }
+  
+  .user-details h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .user-details p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #666;
+  }
+  /* Styling for the user-info container */
+/* .user-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  } */
+  
+  .user-details {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    position: relative;
+  }
+  
+  .user-title-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .code-language {
+    position: absolute;
+    margin-left: 500px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #555; /* You can customize this color */
+  }
+  
+  .timestamp {
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 5px;
+  }
+  
+
+  
+  /* Three-dot menu */
+  .menu button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: auto;
+    padding: 4px;
+  }
+  
+  .menu button:hover {
+    text-decoration: underline;
+  }
+  
+  /* Code Snippet */
+  .code-snippet {
+
+    font-family: 'Roboto', sans-serif; /* Using Roboto as the "ChatGPT" font */
+  font-size: 11px; /* Adjust as needed */
+  line-height: 1.5; /* Increase line height for readability */
+  background-color: #f4f4f4; /* Light background for the code block */
+  padding: 10px; /* Padding around the code */
+  border-radius: 5px; /* Rounded corners */
+  overflow-x: auto; /* Horizontal scrolling for long code lines */
+  color: #333; /* Text color */
+  border: 1px solid black;
+  }
+  
+  .post-solution {
+    margin-top: 12px;
+  }
+  
+  .post-solution h5 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    color: #444;
+  }
+  
+  .post-solution p {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Interaction Bar */
+  .interaction-bar {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  
+  .interaction-bar button {
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  
+  .interaction-bar button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Comment Section */
+  .comment-section {
+    margin-top: 16px;
+    border-top: 1px solid #ddd;
+    padding-top: 12px;
+  }
+  
+  .comment-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .comment-input input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-right: 8px;
+  }
+  
+  .comment-input button {
+    background-color: #28a745;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .comment-input button:hover {
+    background-color: #218838;
+  }
+  
+  /* Comment List */
+  .comment-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .comment-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    background-color: #f8f9fa;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .comment-item p {
+    margin: 0;
+  }
+  
+  .delete-comment-button {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .delete-comment-button:hover {
+    text-decoration: underline;
+  }
+  
