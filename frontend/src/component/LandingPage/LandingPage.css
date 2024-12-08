@@ -70,5 +70,23 @@
   gap: 185px;
 }
 .Different div{
-  font-size: 25px;
+  font-size: 16px;
+}
+
+.Different div {
+  padding: 10px 10px 10px 10px;
+  margin-top:5px;
+  cursor: pointer;
+  border-radius: 100px;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.Different div:hover {
+  background-color: #0ba2cc;
+}
+
+.active-tab {
+  background-color: #0073e6; /* Highlight color */
+  color: white;
 }
