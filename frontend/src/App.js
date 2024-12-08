@@ -16,7 +16,7 @@ import GenerateQuere from './component/CreateQuery/GenerateQuere';
 import ErrorBoundary from './component/ErrorBoundary.jsx';
 import Notification from './component/Notification/Notification.jsx';
 import { useContext } from 'react';
-import Post from './component/Code Area/Code_Area.jsx'
+import Post from './component/CreateCode/CreateCode.jsx'
 function App() {
   const { token, isLoading } = useContext(AuthContext);
 

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./Nav.css"; // We'll define some basic styles in this CSS file.
-
-function Navbar({requestCount}) {
+import logo from "../../Photo/logo_br.png";
+import hb from "../../Photo/hb.png";
+function Navbar({ requestCount }) {
   const [sidebar, setSidebar] = useState(false);
 
   const toggleSidebar = () => {
@@ -12,10 +13,15 @@ function Navbar({requestCount}) {
     <>
       <nav className="navbar">
         <div className="brand">
-          <a href="./">BRAND</a></div>
+          <a href="./">
+            <img src={logo} alt="Unisync" />
+          </a>
+        </div>
         <ul className="nav-links">
           <li>
-            <a href="./ConnectionReq">Connection Requests {requestCount > 0 && `(${requestCount})`}</a>
+            <a href="./ConnectionReq">
+              Connection {requestCount > 0 && `(${requestCount})`}
+            </a>
           </li>
           <li>
             <a href="./Notification">Notifications</a>
@@ -25,7 +31,7 @@ function Navbar({requestCount}) {
           </li>
           <li>
             <button className="equals-btn" onClick={toggleSidebar}>
-              =
+              <img src={hb} alt="Menu" />
             </button>{" "}
           </li>
         </ul>

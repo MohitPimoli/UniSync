@@ -7,7 +7,7 @@ import { MdOutlineQuestionMark } from "react-icons/md";
 import axios from "axios";
 import { useContext } from "react";
 import QueryPage from "../CreateQuery/GenerateQuere";
-import CodeArea from "../Code Area/Code_Area";
+import CodeArea from "../CreateCode/CreateCode";
 
 const CreateNewPost = ({ closePost }) => {
   const [postText, setPostText] = useState("");
@@ -50,7 +50,7 @@ const CreateNewPost = ({ closePost }) => {
         formData.append("media", mediaFile);
       }
       const response = await axios.post(
-        "http://localhost:5001/create-post",
+        "http://localhost:5001/posts/CreatePost",
         formData,
         {
           headers: {
@@ -59,11 +59,13 @@ const CreateNewPost = ({ closePost }) => {
           },
         }
       );
-
       console.log("Post submitted successfully:", response.data);
       closePost();
     } catch (err) {
-      console.error("Error submitting post:", err);
+      console.error(
+        "Error submitting post:",
+        err.response || err.message || err
+      );
       setError(
         err.response?.data?.message ||
           "An error occurred while submitting the post."

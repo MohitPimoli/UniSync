@@ -17,13 +17,16 @@ const ForgotPassword = () => {
 
     try {
       // Make a POST request to the backend for password reset
-      const response = await fetch("http://localhost:5001/auth/reset", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        "http://localhost:5001/auth/request-password-reset",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       if (response.ok) {
         setMessage("A reset link has been sent to your email address.");

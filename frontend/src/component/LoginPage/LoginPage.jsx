@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./LoginPage.css";
 import FormContainer from "../LoginPage/FormContainer";
 import OverlayContainer from "../LoginPage/OverlayContainer";
-import logo from "../../Photo/Login_Page.png";
+import logo from "../../Photo/logo.png";
 function Login() {
   const [RightPanelActive, SetRightPanelActive] = useState(false);
 
@@ -16,17 +16,7 @@ function Login() {
 
   return (
     <div className="FullBody">
-      <img
-        style={{
-          width: "762px",
-          height: "150px",
-          borderRadius: "33px",
-          padding: "20px",
-          marginBottom: "10px",
-        }}
-        src={logo}
-        alt="Logo"
-      />
+      <img src={logo} alt="Logo" />
       <div
         className={`container ${RightPanelActive ? "right-panel-active" : ""}`}
         id="container"

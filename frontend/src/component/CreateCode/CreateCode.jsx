@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import "./Code_Area.css"; // CSS file for styling
+import "./CreateCode.css"; // CSS file for styling
 
-const CodeArea = ({ closeCodeArea }) => { // Ensure prop name matches
+const CodeArea = ({ closeCodeArea }) => {
+  // Ensure prop name matches
   const [description, setDescription] = useState("");
   const [code, setCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,7 +35,9 @@ const CodeArea = ({ closeCodeArea }) => { // Ensure prop name matches
         <div className="code-area-header">
           <h2>Code Area</h2>
           {/* Ensure closeCodeArea is invoked correctly */}
-          <button onClick={closeCodeArea} className="close-btn-code">X</button>
+          <button onClick={closeCodeArea} className="close-btn-code">
+            X
+          </button>
         </div>
 
         {/* Description Section */}

@@ -5,6 +5,7 @@ exports.createPost = async (req, res) => {
     const { content } = req.body;
     const userId = req.user.userId;
 
+
     try {
         let mediaUrl = null;
         if (req.file) {

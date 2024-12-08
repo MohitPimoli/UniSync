@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import "./Post.css";
 
-const Post = ({ userName, userTitle, userWebsite, timeStamp, content, imageUrl }) => {
+const Post = ({
+  userName,
+  userTitle,
+  userWebsite,
+  timeStamp,
+  content,
+  imageUrl,
+}) => {
   const [likes, setLikes] = useState(0); // State for like count
   const [liked, setLiked] = useState(false); // State to track if the post is liked
   const [showCommentBox, setShowCommentBox] = useState(false); // State to toggle the comment box
@@ -49,7 +56,7 @@ const Post = ({ userName, userTitle, userWebsite, timeStamp, content, imageUrl }
       <div className="user-info">
         <img
           className="profile-img"
-          src="https://via.placeholder.com/50" // Replace with actual profile image URL
+          src="https://i.postimg.cc/Qtsg6vg3/nikhil.jpg" // Replace with actual profile image URL
           alt="Profile"
         />
         <div className="user-details">
@@ -75,7 +82,8 @@ const Post = ({ userName, userTitle, userWebsite, timeStamp, content, imageUrl }
       {/* Interaction Bar */}
       <div className="interaction-bar">
         <button onClick={handleLikeClick}>
-          {liked ? "Unlike" : "Like"} ({likes}) {/* Update button text and show count */}
+          {liked ? "Unlike" : "Like"} ({likes}){" "}
+          {/* Update button text and show count */}
         </button>
         <button onClick={handleCommentClick}>
           Comment ({comments.length}) {/* Display comment count */}
