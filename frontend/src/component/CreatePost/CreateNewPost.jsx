@@ -136,7 +136,7 @@ const CreateNewPost = ({ closePost }) => {
             </div>
             <div className="action-item" onClick={handleCodeClick}>
               <RiArticleLine />
-              <span>Write Code</span>
+              <span>Code</span>
             </div>
           </div>
 

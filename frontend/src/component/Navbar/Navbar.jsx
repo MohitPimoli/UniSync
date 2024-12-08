@@ -19,26 +19,27 @@ function Navbar({ requestCount }) {
             <img src={logo} alt="Unisync" />
           </a>
         </div>
+        
         <div className="nav-div">
-          <ul className="nav-links">
-            <li>
-              <a className="nav-con" href="./ConnectionReq">
-                <img src={connection} alt="Connections" />{" "}
-                {requestCount > 0 && `(${requestCount})`}
-              </a>
-            </li>
-            <li>
-              <a className="nav-not" href="./Notification">
-                <img src={bell} alt="Notifications" />
-              </a>
-            </li>
-            <li>
-              <button className="profile-btn" onClick={toggleSidebar}>
-                <img src={profile} alt="Profile" />
-              </button>{" "}
-            </li>
-          </ul>
-        </div>
+        <ul className="nav-links">
+          <li>
+            <a className="nav-con" href="./ConnectionReq">
+              <img src={connection} alt="Connections" />{" "}
+              {requestCount > 0 && `(${requestCount})`}
+            </a>
+          </li>
+          <li>
+            <a className="nav-not" href="./Notification">
+              <img src={bell} alt="Notifications" />
+            </a>
+          </li>
+          <li>
+            <button className="profile-btn" onClick={toggleSidebar}>
+              <img src={profile} alt="Profile" />
+            </button>{" "}
+          </li>
+        </ul>
+      </div>
       </nav>
 
       <div className={`sidebar ${sidebar ? "active" : ""}`}>

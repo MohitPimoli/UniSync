@@ -59,19 +59,19 @@ function Landing() {
         </div>
         <div className="Different">
           <div
-            className={`POST ${activePage === "Post" ? "active" : ""}`}
+            className={`POST ${activePage === "Post" ? "active-tab" : ""}`}
             onClick={() => setActivePage("Post")}
           >
             Post
           </div>
           <div
-            className={`Query_Post ${activePage === "Query" ? "active" : ""}`}
+            className={`Query_Post ${activePage === "Query" ? "active-tab" : ""}`}
             onClick={() => setActivePage("Query")}
           >
             Query
           </div>
           <div
-            className={`Code_Post ${activePage === "Code" ? "active" : ""}`}
+            className={`Code_Post ${activePage === "Code" ? "active-tab" : ""}`}
             onClick={() => setActivePage("Code")}
           >
             Code Area
