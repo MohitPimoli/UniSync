@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { FaThumbsUp, FaRegComment, FaRegShareSquare, FaPaperPlane } from "react-icons/fa"; // Importing icons
+import { FaThumbsUp, FaRegComment, FaShareAlt, FaPaperPlane, FaSave } from "react-icons/fa";// Importing icons
 import "./Post_Code.css";
 
-const Post = () => {
+const Post_Code = () => {
   // Static post details
   const userName = "John Doe";
   const userPhoto =
@@ -101,18 +101,21 @@ int main() {
       </div>
 
       {/* Interaction Bar with Icons */}
-      <div className="interaction-bar">
+      <div className="interaction-bar12">
         <button onClick={handleLikeClick}>
-          <FaThumbsUp /> {liked ? "Unlike" : "Like"} ({likes})
+          <FaThumbsUp />  ({likes}) {/* Update button text and show count */}
         </button>
         <button onClick={handleCommentClick}>
-          <FaRegComment /> Comment ({comments.length})
+          <FaRegComment />  ({comments.length}) {/* Display comment count */}
         </button>
         <button>
-          <FaRegShareSquare /> Repost
+          <FaShareAlt /> 
         </button>
         <button>
-          <FaPaperPlane /> Send
+          <FaPaperPlane /> 
+        </button>
+        <button className="save-button">
+          <FaSave className="save-icon" /> {/* Save button with icon */}
         </button>
       </div>
 
@@ -147,4 +150,4 @@ int main() {
   );
 };
 
-export default Post;
+export default Post_Code;

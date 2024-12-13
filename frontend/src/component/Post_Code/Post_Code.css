@@ -118,24 +118,34 @@
   }
   
   /* Interaction Bar */
-  .interaction-bar {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
+  .interaction-bar12 {
+    display: flex; /* Flexbox to align items in a row */
+    justify-content: space-between; /* Equal spacing between buttons */
+    margin-top: 15px;
   }
   
-  .interaction-bar button {
-    background-color: #007bff;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    border-radius: 4px;
-    padding: 8px 16px;
+  .interaction-bar12 button {
+    flex: 1; /* Equal width for all buttons */
+    margin: 0 5px; /* Space between buttons */
+    padding: 10px; /* Adjust padding for better touch target */
     font-size: 14px;
+    color: #555;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease; /* Smooth hover effect */
   }
   
-  .interaction-bar button:hover {
-    background-color: #0056b3;
+  .interaction-bar12 button i {
+    margin-right: 5px;
+  }
+  
+  .interaction-bar12 button:hover {
+    background-color: #eee;
   }
   
   /* Comment Section */

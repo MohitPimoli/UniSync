@@ -86,7 +86,7 @@ const Post = ({
       </div>
 
       {/* Interaction Bar */}
-      <div className="interaction-bar">
+      <div className="interaction-bar12">
         <button onClick={handleLikeClick}>
           <FaThumbsUp />  ({likes}) {/* Update button text and show count */}
         </button>
