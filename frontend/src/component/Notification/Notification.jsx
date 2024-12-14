@@ -29,17 +29,17 @@ const Notification = () => {
     fetchNotifications();
   }, []);
 
-  const markAsRead = async (id) => {
-    try {
-      await fetch(`/notifications/${id}/markAsRead`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-    } catch (err) {
-      console.error("Error marking notification as read:", err);
-    }
-  };
+  // const markAsRead = async (id) => {
+  //   try {
+  //     await fetch(`/notifications/${id}/markAsRead`, {
+  //       method: "PUT",
+  //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //     });
+  //     setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+  //   } catch (err) {
+  //     console.error("Error marking notification as read:", err);
+  //   }
+  // };
 
   useEffect(() => {
     const socket = io("http://localhost:5001");
