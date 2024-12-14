@@ -40,7 +40,6 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("User data fetched:", data);
         setUser(data);
         setLoading(false);
       } else {

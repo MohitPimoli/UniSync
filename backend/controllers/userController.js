@@ -1,6 +1,6 @@
-const User = require('../models/user'); // Import User model
+const User = require('../models/user');
+require('dotenv').config();
 
-// Get User Profile
 const getUserProfile = async (req, res) => {
     try {
         // Fetch user from DB using the user ID extracted from the JWT token
@@ -11,9 +11,10 @@ const getUserProfile = async (req, res) => {
         }
 
         // Assuming user's profile picture is stored in 'uploads' directory
+        const profileApi = process.env.PROFILE_API;
         const photoUrl = user.profilePicture
-            ? `/uploads/${user.profilePicture}` // Use stored filename
-            : '/uploads/user.jpg';
+            ? `${profileApi}uploads/${user.profilePicture}`
+            : `${profileApi}uploads/user.png`;
 
         res.json({
             name: user.Name,

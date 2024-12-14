@@ -35,7 +35,6 @@ function Landing() {
     },
   ];
   useEffect(() => {
-    console.log("User data:", user);
     setLoading(!user); // Set loading state based on user availability
   }, [user, setLoading]);
 
@@ -60,6 +59,7 @@ function Landing() {
               user?.photoUrl || "http://localhost:5001/uploads/user.png"
             } /* Replace with your profile image URL */
             alt="Profile"
+            crossOrigin="anonymous"
             className="profile-pic"
           />
           <input
@@ -77,7 +77,9 @@ function Landing() {
             Post
           </div>
           <div
-            className={`Query_Post ${activePage === "Query" ? "active-tab" : ""}`}
+            className={`Query_Post ${
+              activePage === "Query" ? "active-tab" : ""
+            }`}
             onClick={() => setActivePage("Query")}
           >
             Query

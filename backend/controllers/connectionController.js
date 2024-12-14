@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Connection = require('../models/connection');
 const User = require('../models/user');
+const io = require('../server'); // Assuming you have a socket.js file to initialize Socket.io
+const { createNotification } = require('../controllers/notificationController');
 
 const sendRequest = async (req, res, next) => {
     const { receiverId } = req.body;
@@ -10,16 +12,17 @@ const sendRequest = async (req, res, next) => {
         const receiver = await User.findById(receiverId);
         if (!receiver) return res.status(404).json({ message: 'Receiver not found' });
 
+        let senderConnection = await Connection.findOneAndUpdate(
+            { userId: senderId },
+            { $setOnInsert: { connections: [], requests: [], blockedUsers: [] } },
+            { new: true, upsert: true }
+        );
 
-        let senderConnection = await Connection.findOne({ userId: senderId });
-        if (!senderConnection) {
-            senderConnection = new Connection({ userId: senderId, connections: [], requests: [] });
-        }
-
-        let receiverConnection = await Connection.findOne({ userId: receiverId });
-        if (!receiverConnection) {
-            receiverConnection = new Connection({ userId: receiverId, connections: [], requests: [] });
-        }
+        let receiverConnection = await Connection.findOneAndUpdate(
+            { userId: receiverId },
+            { $setOnInsert: { connections: [], requests: [], blockedUsers: [] } },
+            { new: true, upsert: true }
+        );
 
         const existingRequest = receiverConnection.requests.find(
             (req) => req.requesterId.toString() === senderId && req.status === 'pending'
@@ -28,6 +31,16 @@ const sendRequest = async (req, res, next) => {
 
         receiverConnection.requests.push({ requesterId: senderId, status: 'pending' });
         await receiverConnection.save();
+
+        await createNotification(
+            receiverId,
+            'friend_request',
+            `${req.user.name} sent you a friend request`,
+            senderId
+        );
+
+        io.emit('connectionRequestSent', { senderId, receiverId });
+        io.emit('notification', { userId: receiverId, message: `${req.user.name} sent you a friend request` });
 
         res.status(200).json({ message: 'Connection request sent' });
     } catch (error) {
@@ -58,6 +71,8 @@ const acceptRequest = async (req, res, next) => {
             { new: true, upsert: true }
         );
 
+        io.emit('connectionRequestAccepted', { requesterId, receiverId });
+
         res.status(200).json({ message: 'Connection request accepted' });
     } catch (error) {
         next(error);
@@ -80,6 +95,8 @@ const rejectRequest = async (req, res, next) => {
         receiverConnection.requests[requestIndex].status = 'rejected';
         await receiverConnection.save();
 
+        io.emit('connectionRequestRejected', { requesterId, receiverId });
+
         res.status(200).json({ message: 'Connection request rejected' });
     } catch (error) {
         next(error);
@@ -89,7 +106,7 @@ const rejectRequest = async (req, res, next) => {
 const getConnections = async (req, res, next) => {
     try {
         const userId = req.user.userId;
-        const connections = await Connection.findOne({ userId }).populate('connections', 'Name Username');
+        const connections = await Connection.findOne({ userId }).populate('connections', 'name username');
 
         if (!connections) return res.status(404).json({ message: 'No connections found' });
 
@@ -102,7 +119,7 @@ const getConnections = async (req, res, next) => {
 const getConnectionRequests = async (req, res, next) => {
     try {
         const userId = req.user.userId;
-        const connection = await Connection.findOne({ userId }).populate('requests.requesterId', 'Name Username');
+        const connection = await Connection.findOne({ userId }).populate('requests.requesterId', 'name username');
 
         if (!connection) return res.status(404).json({ message: 'No connection requests found' });
 
@@ -113,10 +130,47 @@ const getConnectionRequests = async (req, res, next) => {
     }
 };
 
+const getFriendSuggestions = async (req, res, next) => {
+    const userId = req.user.userId;
+
+    try {
+        const user = await User.findById(userId).populate('connections', '_id');
+        const userConnectionIds = user.connections.map(conn => conn._id.toString());
+
+        const suggestions = await User.find({
+            _id: { $nin: [userId, ...userConnectionIds] },
+            fieldOfInterest: { $in: user.fieldOfInterest }
+        })
+            .limit(10)
+            .lean();
+
+        const enrichedSuggestions = await Promise.all(
+            suggestions.map(async (suggestion) => {
+                const mutualFriendCount = await Connection.countDocuments({
+                    userId: suggestion._id,
+                    connections: { $in: userConnectionIds }
+                });
+
+                return {
+                    ...suggestion,
+                    mutualFriendCount,
+                };
+            })
+        );
+
+        enrichedSuggestions.sort((a, b) => b.mutualFriendCount - a.mutualFriendCount);
+
+        res.status(200).json(enrichedSuggestions);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     sendRequest,
     acceptRequest,
     rejectRequest,
     getConnections,
-    getConnectionRequests
+    getConnectionRequests,
+    getFriendSuggestions
 };

@@ -11,8 +11,22 @@ const postRoutes = require('./routes/postRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:5001'];
+
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            if (allowedOrigins.includes(origin) || !origin) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        credentials: true, // Allow cookies and authentication headers
+    })
+);
+
 app.use(express.json());
-app.use(cors());
 app.use(helmet());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/auth', authRoutes);

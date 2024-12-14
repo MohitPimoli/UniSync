@@ -1,5 +1,6 @@
 const Post = require('../models/post');
 const User = require('../models/user');
+const { createNotification } = require('../controllers/notificationController');
 
 exports.createPost = async (req, res) => {
     const { content } = req.body;
@@ -78,3 +79,36 @@ exports.deletePost = async (req, res) => {
         res.status(500).send({ message: 'Server error. Please try again later.' });
     }
 };
+
+
+// Example function to handle liking a post
+exports.likePost = async (req, res) => {
+    const { postId } = req.params;
+    const userId = req.user.userId;
+
+    try {
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ message: 'Post not found' });
+
+        // Assume a "likes" field in Post schema
+        if (!post.likes.includes(userId)) {
+            post.likes.push(userId);
+            await post.save();
+
+            // Create notification
+            await createNotification(
+                post.userId,
+                'post_like',
+                `${req.user.name} liked your post`,
+                userId,
+                postId
+            );
+        }
+
+        res.status(200).json({ message: 'Post liked successfully' });
+    } catch (err) {
+        console.error('Error liking post:', err);
+        res.status(500).json({ message: 'Server error. Please try again later.' });
+    }
+};
+

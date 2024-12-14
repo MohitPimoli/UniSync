@@ -36,6 +36,7 @@ exports.register = [
     body('username').notEmpty().withMessage('Username is required'),
     body('confirmPassword').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
     async (req, res) => {
+        console.log('Request Body:', req.body);
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
@@ -44,20 +45,19 @@ exports.register = [
         const { name, username, email, confirmPassword } = req.body;
 
         try {
-            // Check if email or username already exists
             const existingUser = await User.findOne({
-                $or: [{ Username: username }, { Email: email }]
+                $or: [{ username: username }, { email: email }]
             });
 
             if (existingUser) {
-                const errorMessage = existingUser.Username === username
+                const errorMessage = existingUser.username === username
                     ? 'Username already exists'
                     : 'Email already exists';
                 return res.status(400).json({ errors: [{ msg: errorMessage }] });
             }
 
             const hashedPassword = bcrypt.hashSync(confirmPassword, 10);
-            const user = new User({ Name: name, Username: username, Email: email, Pass: hashedPassword });
+            const user = new User({ name, username, email, password: hashedPassword });
             await user.save();
 
             res.send({ message: 'Registration successful' });
@@ -69,18 +69,17 @@ exports.register = [
     }
 ];
 
-
 exports.login = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const user = await User.findOne({ Username: username });
+        const user = await User.findOne({ username: username });
         if (!user) return res.status(401).send({ message: 'Invalid username or password' });
 
-        const isPasswordValid = bcrypt.compareSync(password, user.Pass);
+        const isPasswordValid = bcrypt.compareSync(password, user.password);
         if (!isPasswordValid) return res.status(401).send({ message: 'Invalid username or password' });
 
-        const token = jwt.sign({ userId: user._id, username: user.Username }, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
         res.status(200).send({ message: 'Login successful', token });
     } catch (err) {
         console.error('Error logging in:', err);
@@ -96,30 +95,47 @@ exports.googleLogin = async (req, res) => {
         const payload = ticket.getPayload();
         const email = payload['email'];
         const name = payload['name'];
+        const sub = payload['sub'];
 
-        let user = await User.findOne({ Email: email });
+        let user = await User.findOne({ email: email });
         if (!user) {
             const defaultPassword = crypto.randomBytes(4).toString('hex');
             const hashedPassword = bcrypt.hashSync(defaultPassword, 10);
-            user = new User({ Name: name, Username: payload['sub'], Email: email, Pass: hashedPassword });
+
+            // Use the user's email as a fallback for the username
+            const uniqueUsername = sub || email.split('@')[0];
+
+            user = new User({
+                name,
+                username: uniqueUsername,
+                email,
+                password: hashedPassword
+            });
             await user.save();
 
             const mailOptions = {
                 from: process.env.EMAIL_USER,
                 to: email,
                 subject: 'Welcome! Your Account Details',
-                html: ` <p>Dear ${name},</p> <p>Welcome to our platform! Your account has been successfully created. Here are your account details:</p> <p><strong>Username:</strong> ${email}</p> <p><strong>Temporary Password:</strong> ${defaultPassword}</p> <p>Please change your password after logging in for the first time.</p> <p>If you have any questions or need assistance, feel free to contact our support team.</p> <p>Best regards,<br>Your Company Name</p> `
+                html: `<p>Dear ${name},</p>
+                       <p>Welcome to our platform! Your account has been successfully created.</p>
+                       <p><strong>Username:</strong> ${uniqueUsername}</p>
+                       <p><strong>Temporary Password:</strong> ${defaultPassword}</p>
+                       <p>Please change your password after logging in for the first time.</p>
+                       <p>If you have any questions or need assistance, feel free to contact our support team.</p>
+                       <p>Best regards,<br>Your Company Name</p>`
             };
             await sendMail(mailOptions);
         }
 
-        const jwtToken = jwt.sign({ userId: user._id, username: user.Username }, JWT_SECRET, { expiresIn: '1h' });
+        const jwtToken = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
         res.status(200).send({ message: 'Login successful', token: jwtToken });
     } catch (error) {
         console.error('Error logging in with Google:', error);
         res.status(500).send({ message: 'Server error' });
     }
 };
+
 
 exports.requestPasswordReset = [
     body('email').isEmail().withMessage('Invalid email format'),
@@ -131,7 +147,7 @@ exports.requestPasswordReset = [
 
         const { email } = req.body;
         try {
-            const user = await User.findOne({ Email: email });
+            const user = await User.findOne({ email: email });
             if (!user) return res.status(404).send({ message: 'User not found' });
 
             const token = crypto.randomBytes(20).toString('hex');
@@ -142,9 +158,9 @@ exports.requestPasswordReset = [
             const resetLink = `http://localhost:3000/forget/${token}`;
             const mailOptions = {
                 from: process.env.EMAIL_USER,
-                to: user.Email,
+                to: user.email,
                 subject: 'Password Reset Request',
-                html: ` <b>Dear ${user.Name},</b> <p>We received a request to reset your password. Click the link below to reset your password:</p> <p><a href="${resetLink}">Reset Password</a></p> <p>This link will expire in 10 minutes.</p> <strong>If you did not request a password reset, please ignore this email or contact support if you have any questions.</strong> <p>Best regards,<br><b>Unisync<b></br> `
+                html: ` <b>Dear ${user.name},</b> <p>We received a request to reset your password. Click the link below to reset your password:</p> <p><a href="${resetLink}">Reset Password</a></p> <p>This link will expire in 10 minutes.</p> <strong>If you did not request a password reset, please ignore this email or contact support if you have any questions.</strong> <p>Best regards,<br><b>Unisync<b></br> `
             };
             await sendMail(mailOptions);
 
@@ -165,7 +181,7 @@ exports.resetPassword = async (req, res) => {
             return res.status(400).send({ message: 'Invalid or expired token' });
         }
 
-        user.Pass = bcrypt.hashSync(newPassword, 10);
+        user.password = bcrypt.hashSync(newPassword, 10);
         user.resetPasswordToken = undefined;
         user.resetPasswordExpires = undefined;
         await user.save();
