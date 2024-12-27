@@ -49,47 +49,76 @@
   margin-top: 12px;
 }
 
-.sidebar {
-  position: fixed;
-  top: 0;
-  right: -250px;
-  width: 250px;
-  height: 100%;
-  background-color: #333;
-  color: white;
-  transition: 0.3s;
-  padding-top: 60px;
-}
-
-.sidebar.active {
-  right: 0;
-}
-
-.sidebar .close-btn {
+/* Dropdown Menu */
+.dropdown-menu {
+  /* border: 2px solid red; */
   position: absolute;
-  top: 10px;
-  left: 20px;
-  font-size: 30px;
-  background-color: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
+  top: 75px;
+  right: 20px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 230px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 9px 0;
+  z-index: 10;
 }
 
-.sidebar ul {
+/* Adjust the profile-header layout */
+.profile-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Style for the profile image */
+.profile-header img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px; /* Add spacing between the image and text */
+}
+
+/* Profile text container */
+.profile-info {
+  display: flex;
+  align-items: center;
+}
+
+/* Text info beside the image */
+.text-info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.text-info p {
+  margin: 0;
+  font-size: 12px;
+  color: gray;
+}
+
+
+.dropdown-links {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-.sidebar ul li {
-  padding: 15px 20px;
+.dropdown-links li {
+  padding: 10px 20px;
 }
 
-.sidebar ul li a {
-  color: white;
+.dropdown-links li a {
   text-decoration: none;
+  color: #333;
+  font-size: 14px;
 }
 
-.sidebar ul li a:hover {
-  text-decoration: underline;
+.dropdown-links li a:hover {
+  background-color: #f5f5f5;
+  color: #d95a44;
+  border-radius: 5px;
 }
+
