@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./Nav.css"; // Styles
+import { AuthContext } from "../../context/AuthContext";
 import logo from "../../Photo/logo_br.png";
 import defaultProfile from "../../Photo/user.png";
 import bell from "../../Photo/bell.png";
@@ -7,31 +8,11 @@ import connection from "../../Photo/people.png";
 
 function Navbar({ requestCount }) {
   const [dropdown, setDropdown] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to check login status
-  const [userProfile, setUserProfile] = useState({}); // State to store user profile info
+  const { user, logout } = useContext(AuthContext);
 
   const toggleDropdown = () => {
     setDropdown(!dropdown);
-    
   };
-  
-  // Mock sign-in function
-  const handleSignIn = () => {
-    setIsLoggedIn(true);
-    
-    setUserProfile({
-      name: "Nikhil Singh Bisht",
-      role: "Graphic Era Hill University",
-      profileImage: "https://i.postimg.cc/Qtsg6vg3/nikhil.jpg", // Replace with real profile image URL
-    });
-  };
-
-  // Mock sign-out function
-  const handleSignOut = () => {
-    setIsLoggedIn(false);
-    setUserProfile({});
-  };
-
   return (
     <>
       <nav className="navbar">
@@ -57,27 +38,30 @@ function Navbar({ requestCount }) {
             <li>
               <button className="profile-btn" onClick={toggleDropdown}>
                 <img
-                  src={isLoggedIn && userProfile.profileImage ? userProfile.profileImage : defaultProfile}
+                  src={
+                    user && user.profileImage
+                      ? user.profileImage
+                      : defaultProfile
+                  }
                   alt="Profile"
                 />
               </button>
               {dropdown && (
                 <div className="dropdown-menu">
-                  {isLoggedIn ? (
-                    // User is logged in
+                  {user ? (
                     <>
                       <div className="profile-header">
                         <div className="profile-info">
-                          <img src={userProfile.profileImage} alt="User" />
+                          <img src={user.profileImage} alt="User" />
                           <div className="text-info">
-                            <h4>{userProfile.name}</h4>
-                            <p>{userProfile.role}</p>
+                            <h4>{user.name}</h4>
+                            <p>{user.role}</p>
                           </div>
                         </div>
                       </div>
                       <ul className="dropdown-links">
                         <li>
-                          <a href="/UserDetail">View Profile</a>
+                          <a href="/profile">Profile</a>
                         </li>
                         <li>
                           <a href="/aboutus">Settings & Privacy</a>
@@ -86,7 +70,7 @@ function Navbar({ requestCount }) {
                           <a href="/ContactUs">Help</a>
                         </li>
                         <li>
-                          <a href="/logout" onClick={handleSignOut}>
+                          <a href="/login" onClick={logout}>
                             Sign Out
                           </a>
                         </li>
@@ -96,9 +80,7 @@ function Navbar({ requestCount }) {
                     // User is not logged in
                     <ul className="dropdown-links">
                       <li>
-                        <a href="/Login" onClick={handleSignIn}>
-                          Sign In
-                        </a>
+                        <a href="/Login">Sign In</a>
                       </li>
                     </ul>
                   )}
@@ -113,4 +95,3 @@ function Navbar({ requestCount }) {
 }
 
 export default Navbar;
-

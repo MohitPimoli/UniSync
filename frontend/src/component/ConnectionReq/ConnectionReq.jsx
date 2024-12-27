@@ -145,13 +145,19 @@ const ConnectionRequests = () => {
                       className="accept-btn"
                       onClick={() => handleAccept(request.requesterId._id)}
                     >
-                    <span>  <PersonAdd fontSize="inherit" /> Accept </span>
+                      <span>
+                        {" "}
+                        <PersonAdd fontSize="inherit" /> Accept{" "}
+                      </span>
                     </button>
                     <button
                       className="ignore-btn"
                       onClick={() => handleReject(request.requesterId._id)}
                     >
-                    <span> <Close fontSize="inherit" /> Ignore </span>
+                      <span>
+                        {" "}
+                        <Close fontSize="inherit" /> Ignore{" "}
+                      </span>
                     </button>
                   </div>
                 </div>

@@ -43,8 +43,8 @@ function App() {
                 <Route path="/ConnectionReq" element={<ConnectionRequests />} />
                 <Route path="/ContactUs" element={<ContactUs />} />
                 <Route path="/Post" element={<Post />} />
-                <Route path="/Notification" element={<Notification/>} />
-                <Route path="/Userdetail" element={<UserDetail/>} />
+                <Route path="/Notification" element={<Notification />} />
+                <Route path="/profile" element={<UserDetail />} />
                 {/* Protected Route */}
                 <Route
                   path="/create-post"

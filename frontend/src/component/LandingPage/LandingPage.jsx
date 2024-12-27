@@ -55,9 +55,7 @@ function Landing() {
       <div className="post-container">
         <div className="post-header">
           <img
-            src={
-              user?.photoUrl || "http://localhost:5001/uploads/user.png"
-            } /* Replace with your profile image URL */
+            src={user?.photoUrl}
             alt="Profile"
             crossOrigin="anonymous"
             className="profile-pic"
@@ -88,7 +86,7 @@ function Landing() {
             className={`Code_Post ${activePage === "Code" ? "active-tab" : ""}`}
             onClick={() => setActivePage("Code")}
           >
-            Code Area
+            Code
           </div>
         </div>
       </div>

@@ -12,7 +12,7 @@ const Notification = () => {
     const fetchNotifications = async () => {
       setLoading(true);
       try {
-        const response = await fetch("/notifications", {
+        const response = await fetch("http://localhost:5001/notifications", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

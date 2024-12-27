@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 import "./User_detail.css";
 
 function User_detail() {
+  const { user } = useContext(AuthContext);
   const initialUser = {
     name: "John Doe",
     role: "Frontend Developer",
@@ -14,12 +16,21 @@ function User_detail() {
     bio: "A full-stack developer with experience in creating scalable web applications. I am passionate about problem-solving, UI/UX design, and collaborating with teams.",
     skills: ["React", "JavaScript", "CSS", "HTML", "Node.js", "Wireframing"],
     posts: [
-      { title: "My First Post", content: "This is the content of my first post." },
-      { title: "React Best Practices", content: "Tips for improving React performance." },
+      {
+        title: "My First Post",
+        content: "This is the content of my first post.",
+      },
+      {
+        title: "React Best Practices",
+        content: "Tips for improving React performance.",
+      },
     ],
     queries: [
       { query: "How to optimize React apps?", date: "2024-01-01" },
-      { query: "What is the best state management library?", date: "2024-01-05" },
+      {
+        query: "What is the best state management library?",
+        date: "2024-01-05",
+      },
     ],
     codes: [
       "console.log('Hello World');",
@@ -27,7 +38,7 @@ function User_detail() {
     ],
   };
 
-  const [user, setUser] = useState(initialUser);
+  const [User, setUser] = useState(initialUser);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState(initialUser);
 
@@ -51,7 +62,7 @@ function User_detail() {
       {/* Profile Header */}
       <div className="profile-header">
         <div className="profile-photo">
-          <img src="https://via.placeholder.com/150" alt="User" />
+          <img src={user?.photoUrl} alt="Profile" crossOrigin="anonymous" />
         </div>
         <div className="profile-info">
           {editing ? (
@@ -85,9 +96,9 @@ function User_detail() {
             </>
           ) : (
             <>
-              <h2>{user.name}</h2>
-              <p>{user.role}</p>
-              <p>{user.bio}</p>
+              <h2>{User.name}</h2>
+              <p>{User.role}</p>
+              <p>{User.bio}</p>
               <button className="primary-btn" onClick={handleEditToggle}>
                 Edit Profile
               </button>
@@ -103,22 +114,22 @@ function User_detail() {
           <h3>Basic Information</h3>
           <ul>
             <li>
-              <strong>Age:</strong> {user.age}
+              <strong>Age:</strong> {User.age}
             </li>
             <li>
-              <strong>Years of Experience:</strong> {user.experienceYears}
+              <strong>Years of Experience:</strong> {User.experienceYears}
             </li>
             <li>
-              <strong>Phone:</strong> {user.phone}
+              <strong>Phone:</strong> {User.phone}
             </li>
             <li>
-              <strong>Location:</strong> {user.location}
+              <strong>Location:</strong> {User.location}
             </li>
             <li>
-              <strong>Email:</strong> {user.email}
+              <strong>Email:</strong> {User.email}
             </li>
             <li>
-              <strong>CTC:</strong> {user.ctc}
+              <strong>CTC:</strong> {User.ctc}
             </li>
           </ul>
         </div>
@@ -127,7 +138,7 @@ function User_detail() {
         <div className="profile-card">
           <h3>Skills</h3>
           <div className="skills-list">
-            {user.skills.map((skill, index) => (
+            {User.skills.map((skill, index) => (
               <span key={index} className="skill-tag">
                 {skill}
               </span>
@@ -139,7 +150,7 @@ function User_detail() {
         <div className="profile-card">
           <h3>User Posts</h3>
           <ul>
-            {user.posts.map((post, index) => (
+            {User.posts.map((post, index) => (
               <li key={index}>
                 <strong>{post.title}:</strong> {post.content}
               </li>
@@ -151,7 +162,7 @@ function User_detail() {
         <div className="profile-card">
           <h3>User Queries</h3>
           <ul>
-            {user.queries.map((query, index) => (
+            {User.queries.map((query, index) => (
               <li key={index}>
                 <strong>{query.query}</strong> - {query.date}
               </li>
@@ -163,7 +174,7 @@ function User_detail() {
         <div className="profile-card">
           <h3>Saved Code Snippets</h3>
           <ul>
-            {user.codes.map((code, index) => (
+            {User.codes.map((code, index) => (
               <li key={index}>
                 <code>{code}</code>
               </li>
