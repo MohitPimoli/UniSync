@@ -13,14 +13,13 @@ const AboutUs = () => {
     // Simulate a network request or task
     setTimeout(() => {
       setIsLoading(false); // Set loading to false after task completion
-    }, 3000); // 3 seconds delay for demonstration
+    }, 400); // 3 seconds delay for demonstration
   }, []);
   return (
     <>
       {isLoading && <LoadingScreen />}
       {!isLoading && (
         <div>
-          <h1>Welcome to Unisync!</h1>
           {/* Rest of your home page content */}
         </div>
       )}
