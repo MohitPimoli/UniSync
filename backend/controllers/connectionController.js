@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Connection = require('../models/connection');
-const User = require('../models/user');
+const User = require('../models/User');
 const io = require('../server'); // Assuming you have a socket.js file to initialize Socket.io
 const { createNotification } = require('../controllers/notificationController');
 

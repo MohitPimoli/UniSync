@@ -17,9 +17,7 @@ const upload = multer({ storage });
 
 
 router.post('/CreatePost', authenticate, upload.single('media'), postController.createPost);
-
-router.get('/GetPost', postController.getAllPosts);
-
+router.get('/getRecentPosts', authenticate, postController.getRecentPosts);
 router.get('/user/:userId', postController.getUserPosts);
 router.delete('/:postId', authenticate, postController.deletePost);
 

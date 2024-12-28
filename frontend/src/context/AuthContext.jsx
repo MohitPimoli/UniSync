@@ -39,8 +39,8 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setUser(data);
+        const { user, photoUrl } = await response.json();
+        setUser({ ...user, photoUrl });
         setLoading(false);
       } else {
         logout();
@@ -68,18 +68,16 @@ export const AuthProvider = ({ children }) => {
         alert("Session expired. Please log in again.");
       }, timeUntilLogout);
     } else {
-      // Token already expired
       logout();
     }
   };
 
-  // Function to handle login
   const login = (newToken) => {
     setToken(newToken);
     setLoading(true);
     localStorage.setItem("authToken", newToken);
     scheduleLogout(newToken);
-    fetchUserData(newToken); // Fetch user data after login
+    fetchUserData(newToken);
   };
 
   useEffect(() => {
@@ -88,9 +86,9 @@ export const AuthProvider = ({ children }) => {
       setToken(storedToken);
       setLoading(true);
       scheduleLogout(storedToken);
-      fetchUserData(storedToken); // Fetch user data on initial load if token exists
+      fetchUserData(storedToken);
     } else {
-      setLoading(false); // Stop loading if no token is found
+      setLoading(false);
     }
 
     return () => {
@@ -105,7 +103,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         token,
-        user, // Provide user data via context
+        user,
         login,
         logout,
         isLoading,

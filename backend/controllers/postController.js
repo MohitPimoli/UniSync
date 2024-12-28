@@ -1,11 +1,17 @@
+const express = require('express');
+const router = express.Router();
 const Post = require('../models/post');
-const User = require('../models/user');
+const User = require('../models/User');
+const Connection = require('../models/Connection');
 const { createNotification } = require('../controllers/notificationController');
 
 exports.createPost = async (req, res) => {
     const { content } = req.body;
-    const userId = req.user.userId;
-
+    const userId = req.user.id;
+    console.log('userId in create post:', userId);
+    if (!userId) {
+        return res.status(401).send({ message: 'Unauthorized: User ID missing' });
+    }
 
     try {
         let mediaUrl = null;
@@ -27,15 +33,43 @@ exports.createPost = async (req, res) => {
     }
 };
 
-exports.getAllPosts = async (req, res) => {
+exports.getRecentPosts = async (req, res) => {
+    const userId = req.user.id;
+
     try {
-        const posts = await Post.find().populate('userId', 'Name Username');
+        // Ensure the user exists
+        const user = await User.findById(userId).populate('connections');
+        if (!user) return res.status(404).send({ message: 'User not found' });
+
+        // Collect 1st-degree connections
+        const firstDegreeConnections = user.connections.map(conn => conn._id);
+
+        // Fetch 2nd-degree connections
+        const secondDegreeConnections = await User.find({
+            _id: { $in: firstDegreeConnections },
+        }).populate('connections');
+
+        const secondDegreeIds = secondDegreeConnections.flatMap(conn =>
+            conn.connections.map(c => c._id)
+        );
+
+        // Combine userId with connections
+        const connectionIds = [userId, ...firstDegreeConnections, ...secondDegreeIds];
+
+        // Fetch 2 recent posts from each connection, including the current user's recent post
+        const posts = await Post.find({ userId: { $in: connectionIds } })
+            .sort({ createdAt: -1 })
+            .limit(30) // Fetch a max of 50 posts to paginate on the frontend
+            .populate('userId', 'name username profilePicture');
+        console.log('Posts fetched', posts);
+
         res.status(200).send(posts);
     } catch (err) {
         console.error('Error fetching posts:', err);
         res.status(500).send({ message: 'Server error. Please try again later.' });
     }
 };
+
 
 exports.getUserPosts = async (req, res) => {
     const { userId } = req.params;

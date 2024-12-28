@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import LoadingScreen from "../LoadingScrean/LoadingScreen";
 import Navbar from "../Navbar/Navbar";
 import CreatePostPage from "../CreatePost/CreateNewPost";
@@ -7,39 +7,62 @@ import PostQuery from "../Post_Query/Post_Query";
 import PostCode from "../Post_Code/Post_Code";
 import "./LandingPage.css";
 import { AuthContext } from "../../context/AuthContext";
+import axios from "axios";
 
 function Landing() {
-  const [activePage, setActivePage] = useState("Post"); // Default to "Post" page
+  const [activePage, setActivePage] = useState("Post");
   const [showPostForm, setShowPostForm] = useState(false);
-  const { user, isLoading, setLoading } = useContext(AuthContext);
+  const { token, user, isLoading, setLoading } = useContext(AuthContext);
+  const [newPost, setNewPost] = useState(null);
+  const [posts, setPosts] = useState(null);
+  const [fetched, setFetched] = useState(false);
 
-  // Sample data for posts
-  const posts = [
-    {
-      id: 1,
-      userName: "Sarang Kulkarni",
-      userTitle: "SDE @ Microsoft | Former SDE Intern @ Microsoft",
-      userWebsite: "https://mywebsite.com",
-      timeStamp: "10m",
-      content: "As a recent graduate, I am struggling to clear interviews.",
-      imageUrl: "https://via.placeholder.com/400", // Replace with actual image URL
-    },
-    {
-      id: 2,
-      userName: "John Doe",
-      userTitle: "Software Engineer @ Google",
-      userWebsite: "https://johndoe.com",
-      timeStamp: "1h",
-      content: "Excited to start my new journey!",
-      imageUrl: "https://via.placeholder.com/400", // Replace with actual image URL
-    },
-  ];
   useEffect(() => {
-    setLoading(!user); // Set loading state based on user availability
-  }, [user, setLoading]);
+    if (user && !isLoading) {
+      setLoading(true);
+    }
+  }, [user, isLoading, setLoading]);
 
-  // Show loading screen if data is being fetched
-  if (isLoading) return <LoadingScreen />;
+  const fetchRecentPosts = useCallback(async () => {
+    if (!user || fetched) return;
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "http://localhost:5001/posts/GetRecentPosts",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPosts(response.data);
+      setFetched(true);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [user, setLoading, fetched, token]);
+  console.log("Posts: of landingpage", posts);
+
+  useEffect(() => {
+    if (user) {
+      fetchRecentPosts();
+    }
+  }, [user, fetchRecentPosts]);
+
+  const addNewPost = (post) => {
+    setPosts((prevPosts) => [
+      post,
+      ...prevPosts.slice(0, prevPosts.length - 1),
+    ]);
+    setNewPost(post);
+  };
+
+  console.log("newPost:", newPost);
+
+  // Show loading screen if still loading
+  if (isLoading && !fetched) return <LoadingScreen />;
 
   const handlePostInputClick = () => {
     setShowPostForm(true);
@@ -92,27 +115,30 @@ function Landing() {
       </div>
 
       {/* Show the respective page based on the activePage state */}
-      {activePage === "Post" && (
-        <div className="posts-list">
-          {posts.map((post) => (
+      {activePage === "Post" &&
+        posts &&
+        posts.map((post) => (
+          <div className="posts-list" key={post.id}>
             <Post
-              key={post.id}
-              userName={post.userName}
-              userTitle={post.userTitle}
-              userWebsite={post.userWebsite}
-              timeStamp={post.timeStamp}
+              userName={post.userId?.name}
+              userProfilePicture={post.userId?.profilePicture}
+              userTitle={post.userId?.userTitle}
+              timeStamp={new Date(post.createdAt).toLocaleString()}
               content={post.content}
-              imageUrl={post.imageUrl}
+              media={post.media}
             />
-          ))}
-        </div>
-      )}
+          </div>
+        ))}
+
       {activePage === "Query" && <PostQuery />}
       {activePage === "Code" && <PostCode />}
 
       {/* Show CreatePostPage when user clicks on the input */}
       {showPostForm && (
-        <CreatePostPage closePost={handleClosePostForm} /> // Show modal when user clicks the input box
+        <CreatePostPage
+          closePost={handleClosePostForm}
+          addNewPost={addNewPost}
+        /> // Show modal when user clicks the input box
       )}
     </>
   );

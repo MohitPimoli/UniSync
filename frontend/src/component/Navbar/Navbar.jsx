@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import "./Nav.css"; // Styles
 import { AuthContext } from "../../context/AuthContext";
 import logo from "../../Photo/logo_br.png";
-import defaultProfile from "../../Photo/user.png";
+//import defaultProfile from "../../Photo/user.png";
 import bell from "../../Photo/bell.png";
 import connection from "../../Photo/people.png";
 
@@ -38,12 +38,9 @@ function Navbar({ requestCount }) {
             <li>
               <button className="profile-btn" onClick={toggleDropdown}>
                 <img
-                  src={
-                    user && user.profileImage
-                      ? user.profileImage
-                      : defaultProfile
-                  }
+                  src={user?.photoUrl}
                   alt="Profile"
+                  crossOrigin="anonymous"
                 />
               </button>
               {dropdown && (
@@ -52,7 +49,11 @@ function Navbar({ requestCount }) {
                     <>
                       <div className="profile-header">
                         <div className="profile-info">
-                          <img src={user.profileImage} alt="User" />
+                          <img
+                            src={user?.photoUrl}
+                            alt="User"
+                            crossOrigin="anonymous"
+                          />
                           <div className="text-info">
                             <h4>{user.name}</h4>
                             <p>{user.role}</p>

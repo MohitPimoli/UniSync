@@ -1,15 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import "./CreateNewPost.css";
 import { AuthContext } from "../../context/AuthContext";
 import { GrGallery } from "react-icons/gr";
 import { RiArticleLine } from "react-icons/ri";
 import { MdOutlineQuestionMark } from "react-icons/md";
 import axios from "axios";
-import { useContext } from "react";
 import QueryPage from "../CreateQuery/GenerateQuere";
 import CodeArea from "../CreateCode/CreateCode";
 
-const CreateNewPost = ({ closePost }) => {
+const CreateNewPost = ({ closePost, addNewPost }) => {
   const [postText, setPostText] = useState("");
   const [mediaFile, setMediaFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -17,8 +16,7 @@ const CreateNewPost = ({ closePost }) => {
   const [error, setError] = useState(null);
   const [showQueryPage, setShowQueryPage] = useState(false);
   const [showCodeArea, setShowCodeArea] = useState(false); // New state for CodeArea visibility
-  const { token } = useContext(AuthContext);
-
+  const { user, token } = useContext(AuthContext);
   const handlePostChange = (e) => {
     setPostText(e.target.value);
   };
@@ -49,6 +47,7 @@ const CreateNewPost = ({ closePost }) => {
       if (mediaFile) {
         formData.append("media", mediaFile);
       }
+      console.log("Token being sent:", token);
       const response = await axios.post(
         "http://localhost:5001/posts/CreatePost",
         formData,
@@ -60,6 +59,7 @@ const CreateNewPost = ({ closePost }) => {
         }
       );
       console.log("Post submitted successfully:", response.data);
+      addNewPost(response.data.post);
       closePost();
     } catch (err) {
       console.error(
@@ -103,14 +103,17 @@ const CreateNewPost = ({ closePost }) => {
         <div className="create-post-content">
           <div className="user-info">
             <img
-              src="https://i.postimg.cc/mDwYKVVF/yash.jpg"
+              src={user?.photoUrl}
               alt="User"
+              crossOrigin="anonymous"
               className="profile-pic-modal"
             />
             <div className="user-details">
-              <p className="username1">Name of User</p>
+              <p className="username1">{user ? user.name : "Guest"}</p>
             </div>
-            <p className="visibility1">Public</p>
+            <div>
+              <p className="visibility1">Public</p>
+            </div>
           </div>
           <textarea
             className="post-textarea"

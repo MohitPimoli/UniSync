@@ -1,5 +1,5 @@
 const Query = require('../models/query');
-const User = require('../models/user');
+const User = require('../models/User');
 const { validationResult } = require('express-validator');
 
 const createQuery = async (req, res) => {

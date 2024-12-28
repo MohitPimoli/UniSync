@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import "./Post.css";
-import { FaThumbsUp, FaRegComment, FaShareAlt, FaPaperPlane, FaSave } from "react-icons/fa"; // Import FontAwesome icons
+import profileurl from "../../Photo/user.png";
+import {
+  FaThumbsUp,
+  FaRegComment,
+  FaShareAlt,
+  FaPaperPlane,
+  FaSave,
+} from "react-icons/fa"; // Import FontAwesome icons
 
 const Post = ({
   userName,
+  profilePicture, ///// apply this profile to posts
   userTitle,
-  userWebsite,
   timeStamp,
   content,
-  imageUrl,
+  media,
 }) => {
   const [likes, setLikes] = useState(0); // State for like count
   const [liked, setLiked] = useState(false); // State to track if the post is liked
@@ -55,22 +62,19 @@ const Post = ({
   const handleSaveClick = () => {
     alert("Post saved!"); // Example functionality
   };
-
   return (
     <div className="post-card12">
       {/* User Info Section */}
       <div className="user-info">
         <img
           className="profile-img"
-          src="https://i.postimg.cc/Qtsg6vg3/nikhil.jpg" // Replace with actual profile image URL
+          src={profileurl} // Replace with actual profile image URL
           alt="Profile"
+          crossOrigin="anonymous"
         />
         <div className="user-details">
           <h4>{userName}</h4>
           <p>{userTitle}</p>
-          <a href={userWebsite} target="_blank" rel="noopener noreferrer">
-            Visit my website
-          </a>
           <span className="timestamp">{timeStamp}</span>
         </div>
       </div>
@@ -82,22 +86,22 @@ const Post = ({
 
       {/* Image Section */}
       <div className="post-image">
-        <img src={imageUrl} alt="Post Visual" />
+        {media && <img src={media} alt="Post Visual" />}
       </div>
 
       {/* Interaction Bar */}
       <div className="interaction-bar12">
         <button onClick={handleLikeClick}>
-          <FaThumbsUp />  ({likes}) {/* Update button text and show count */}
+          <FaThumbsUp /> ({likes}) {/* Update button text and show count */}
         </button>
         <button onClick={handleCommentClick}>
-          <FaRegComment />  ({comments.length}) {/* Display comment count */}
+          <FaRegComment /> ({comments.length}) {/* Display comment count */}
         </button>
         <button>
-          <FaShareAlt /> 
+          <FaShareAlt />
         </button>
         <button>
-          <FaPaperPlane /> 
+          <FaPaperPlane />
         </button>
         <button onClick={handleSaveClick} className="save-button">
           <FaSave className="save-icon" /> {/* Save button with icon */}

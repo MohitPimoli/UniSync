@@ -11,7 +11,6 @@ const SocialContainer = () => {
   const { login } = useContext(AuthContext); // Access login function from AuthContext
 
   const handleSuccess = async (credentialResponse) => {
-    console.log("Google OAuth Success:", credentialResponse);
     try {
       // Send the credential to your backend for verification
       const response = await axios.post(

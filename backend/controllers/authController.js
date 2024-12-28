@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const { validationResult, body } = require('express-validator');
 const { OAuth2Client } = require('google-auth-library');
 const nodemailer = require('nodemailer');
-const User = require('../models/user');
+const User = require('../models/User');
 require('dotenv').config();
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -79,7 +79,12 @@ exports.login = async (req, res) => {
         const isPasswordValid = bcrypt.compareSync(password, user.password);
         if (!isPasswordValid) return res.status(401).send({ message: 'Invalid username or password' });
 
-        const token = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
+        const jwtToken = jwt.sign(
+            { id: user._id, username: user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
         res.status(200).send({ message: 'Login successful', token });
     } catch (err) {
         console.error('Error logging in:', err);
@@ -128,7 +133,12 @@ exports.googleLogin = async (req, res) => {
             await sendMail(mailOptions);
         }
 
-        const jwtToken = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
+        const jwtToken = jwt.sign(
+            { id: user._id, username: user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
         res.status(200).send({ message: 'Login successful', token: jwtToken });
     } catch (error) {
         console.error('Error logging in with Google:', error);
