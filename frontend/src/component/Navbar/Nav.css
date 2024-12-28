@@ -51,7 +51,6 @@
 
 /* Dropdown Menu */
 .dropdown-menu {
-  /* border: 2px solid red; */
   position: absolute;
   top: 75px;
   right: 20px;
@@ -64,41 +63,32 @@
   z-index: 10;
 }
 
-/* Adjust the profile-header layout */
 .profile-header {
-  display: flex;
-  align-items: center;
+  text-align: center;
   padding: 10px 0;
   border-bottom: 1px solid #ccc;
 }
 
-/* Style for the profile image */
 .profile-header img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  margin-right: 10px; /* Add spacing between the image and text */
+  margin: 0 auto;
+  display: block;
 }
 
-/* Profile text container */
-.profile-info {
-  display: flex;
-  align-items: center;
-}
-
-/* Text info beside the image */
-.text-info h4 {
-  margin: 0;
+.profile-header h4 {
+  margin: 5px 0;
   font-size: 16px;
   font-weight: bold;
 }
 
-.text-info p {
+.profile-header p {
+  position: relative;
   margin: 0;
   font-size: 12px;
   color: gray;
 }
-
 
 .dropdown-links {
   list-style: none;
@@ -122,3 +112,40 @@
   border-radius: 5px;
 }
 
+.UserprofileCard{
+  top: 110px;
+  margin-left: 8%;
+  display: flex;
+  position: absolute;
+}
+
+.dropdown-links li span{
+  margin: 2px;
+}
+/* Previous Nav.css styles remain the same */
+
+.nav-con, .nav-not {
+  cursor: pointer;
+}
+
+.profile-dropdown {
+  position: relative;
+}
+
+.user-profile-card-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.dropdown-links li {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dropdown-links li span {
+  display: flex;
+  align-items: center;
+}
