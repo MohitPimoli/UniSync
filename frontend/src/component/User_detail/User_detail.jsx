@@ -110,7 +110,7 @@ function User_detail() {
       {/* Profile Content */}
       <div className="profile-content">
         {/* Basic Information */}
-        <div className="profile-card">
+        <div className="profile-card12">
           <h3>Basic Information</h3>
           <ul>
             <li>
@@ -135,7 +135,7 @@ function User_detail() {
         </div>
 
         {/* Skills Section */}
-        <div className="profile-card">
+        <div className="profile-card12">
           <h3>Skills</h3>
           <div className="skills-list">
             {User.skills.map((skill, index) => (
@@ -147,7 +147,7 @@ function User_detail() {
         </div>
 
         {/* Posts Section */}
-        <div className="profile-card">
+        <div className="profile-card12">
           <h3>User Posts</h3>
           <ul>
             {User.posts.map((post, index) => (
@@ -159,7 +159,7 @@ function User_detail() {
         </div>
 
         {/* Queries Section */}
-        <div className="profile-card">
+        <div className="profile-card12">
           <h3>User Queries</h3>
           <ul>
             {User.queries.map((query, index) => (
@@ -171,7 +171,7 @@ function User_detail() {
         </div>
 
         {/* Code Snippets Section */}
-        <div className="profile-card">
+        <div className="profile-card12">
           <h3>Saved Code Snippets</h3>
           <ul>
             {User.codes.map((code, index) => (
