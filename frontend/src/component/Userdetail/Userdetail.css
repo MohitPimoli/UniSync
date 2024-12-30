@@ -1,0 +1,137 @@
+/* General Layout */
+.profile-page122 {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Header Section */
+.profile-header122 {
+  position: relative;
+}
+
+.cover-image122 {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.profile-info-container122 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  margin-top: -60px;
+}
+
+.profile-info122 {
+  display: flex;
+  align-items: center;
+}
+
+.profile-pic122 {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid white;
+  margin-right: 20px;
+}
+.profile-details122
+{
+  /* border:  2px solid red; */
+  margin-top: 50px;
+}
+.profile-details122 p {
+  /* margin: 0; */
+  font-size: 20px;
+}
+
+.social-links122 a {
+  margin-right: 15px;
+  color: #0073b1;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.profile-actions122 {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-actions122 a,
+.change-password-btn122 {
+  padding: 10px 15px;
+  border: 1px solid #0073b1;
+  background-color: #fff;
+  color: #0073b1;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.profile-actions122 a:hover,
+.change-password-btn122:hover {
+  background-color: #0073b1;
+  color: #fff;
+}
+
+/* Tabs */
+.profile-tabs122 {
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.tab-button122 {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  border: none;
+  background: none;
+}
+
+.active-tab122 {
+  color: #0073b1;
+  border-bottom: 2px solid #0073b1;
+  font-weight: bold;
+}
+
+.tab-button122:hover {
+  color: #0073b1;
+}
+
+/* Tab Content */
+.tab-content122 {
+  padding: 20px;
+  background-color: #fff;
+  margin: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.badge122 {
+  display: inline-block;
+  background-color: #0073b1;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.contact-info122 {
+  display: flex;
+  /* justify-content: space-between; */
+  gap: 45%;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+.tab-content122 h3 {
+  margin-top: 20px;
+}

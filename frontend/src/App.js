@@ -15,8 +15,9 @@ import CreateNewPost from './component/CreatePost/CreateNewPost.jsx';
 import GenerateQuere from './component/CreateQuery/GenerateQuere';
 import ErrorBoundary from './component/ErrorBoundary.jsx';
 import Notification from './component/Notification/Notification.jsx';
-import UserDetail from './component/User_detail/User_detail.jsx';
+import UserDetail from './component/Userdetail/Userdetail.jsx';
 import Setting from './component/Setting/Setting.jsx'
+import Editprofile from './component/EditProfile/EditProfile.jsx'
 import { useContext } from 'react';
 import Post from './component/CreateCode/CreateCode.jsx'
 function App() {
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/Notification" element={<Notification />} />
                 <Route path="/profile" element={<UserDetail />} />
                 <Route path="/setting" element={<Setting />} />
+                <Route path="/editprofile" element={<Editprofile />} />
                 {/* Protected Route */}
                 <Route
                   path="/create-post"
