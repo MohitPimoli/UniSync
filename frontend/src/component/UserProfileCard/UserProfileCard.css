@@ -1,115 +1,128 @@
 .profile-card {
-    width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-  }
-  
-  .profile-header {
-    position: relative;
-    background-color: #f5f5f5;
-    height: 100px;
-  }
-  
-  .profile-image-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    border: 3px solid #fff;
-    overflow: hidden;
-    width: 80px;
-    height: 80px;
-  }
-  
-  .profile-image {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .profile-info1 {
-    text-align: center;
-    padding: 20px 10px;
-  }
-  
-  .profile-name1112 {
-    margin: 0 0 5px;
-    font-size: 18px;
-    color: #d95a44; /* Updated to the desired color */
-  }
-  
-  .profile-university {
-    margin: 0;
-    font-size: 14px;
-    color: #777;
-  }
-  
-  .stats-container {
-    padding: 10px 20px;
-    border-top: 1px solid #ddd;
-  }
-  
-  .stat-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  
-  .stat-value {
-    font-weight: bold;
-    color: #d95a44;
-  }
-  
-  .section {
-    padding: 10px 20px;
-    border-top: 1px solid #ddd;
-  }
-  
-  .saved-items {
-    color: #777;
-  }
-  
-  .section-title {
-    margin: 0 0 10px;
-    font-size: 14px;
-    color: #0073b1;
-  }
-  
-  .group-item {
-    margin-bottom: 5px;
-  }
-  
-  .discover-text {
-    margin: 0;
-    color: #777;
-  }
-  
-  .saved-items-button {
-    padding: 8px 12px;
-    background-color: #d95a44;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-top: 10px;
-  }
-  
-  .saved-posts-container {
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-  
-  .saved-post {
-    margin-bottom: 5px;
-    font-size: 14px;
-  }
-  
+  width: 100%;
+  max-width: 320px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  margin-left: 40px;
+  position: fixed; /* Aligns to the left */
+  top: 100px; /* Adjust for header */
+  left: 20px;
+}
+
+.profile-header {
+  position: relative;
+  background-color: #f5f5f5;
+  height: 120px;
+}
+
+.profile-image-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 3px solid #fff;
+  overflow: hidden;
+  width: 90px;
+  height: 90px;
+  background-color: #fff;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info {
+  text-align: center;
+  padding: 15px 10px;
+}
+
+.profile-name {
+  margin: 0 0 5px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #d95a44;
+}
+
+.profile-university {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.profile-bio {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #777;
+}
+
+.profile-details {
+  font-size: 14px;
+  color: #444;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+.stats-container {
+  padding: 15px 20px;
+  border-top: 1px solid #ddd;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-weight: bold;
+  color: #d95a44;
+}
+
+.section {
+  padding: 15px 20px;
+  border-top: 1px solid #ddd;
+}
+
+
+.saved-items-button {
+  display: block;
+  width: fit-content; /* Automatically adjust button width to its content */
+  text-align: center;
+  padding: 10px 15px;
+  background-color: #d95a44;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 10px auto; /* Center horizontally using auto margins */
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+
+.saved-items-button:hover {
+  background-color: #b74938;
+}
+
+.section-title {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #0073b1;
+}
+
+.group-item,
+.event-item {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
+}
