@@ -1,15 +1,17 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './UserProfileCard.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "./UserProfileCard.css";
 
 const UserProfileCard = () => {
   const user = {
-    namebhai: "Hardik Pant",
+    name: "Hardik Pant",
     university: "Graphic Era Hill University",
     profileViewers: 25,
     postImpressions: 17,
-    groups: ["Python Developers Community"],
-    events: [],
+    email: "hardikpant@example.com",
+    phone: "+91-9876543210",
+    location: "Dehradun, India",
+    bio: "A passionate developer and tech enthusiast with an interest in AI and ML.",
   };
 
   return (
@@ -24,9 +26,13 @@ const UserProfileCard = () => {
         </div>
       </div>
 
-      <div className="profile-info1">
-        <h3 className="profile-name1112">{user.namebhai}</h3>
+      <div className="profile-info">
+        <h3 className="profile-name">{user.name}</h3>
         <p className="profile-university">{user.university}</p>
+        <p className="profile-bio">{user.bio}</p>
+        <p className="profile-details">
+          📧 {user.email} <br /> 📞 {user.phone} <br /> 📍 {user.location}
+        </p>
       </div>
 
       <div className="stats-container">
@@ -44,20 +50,6 @@ const UserProfileCard = () => {
         <Link to="/saved-posts" className="saved-items-button">
           View Saved Posts
         </Link>
-      </div>
-
-      <div className="section">
-        <h4 className="section-title">Recent</h4>
-        {user.groups.map((group, index) => (
-          <div key={index} className="group-item">
-            <span>{group}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="section">
-        <h4 className="section-title">Events</h4>
-        <p className="discover-text">Discover more</p>
       </div>
     </div>
   );
