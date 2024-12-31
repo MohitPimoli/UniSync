@@ -25,15 +25,37 @@ const createQuery = async (req, res) => {
     }
 };
 
-const getUserQueries = async (req, res) => {
+const getRecentQueries = async (req, res) => {
     const userId = req.user.userId;
 
     try {
-        const queries = await Query.find({ userId }).populate('userId', 'Name Username');
-        if (!queries.length) {
-            return res.status(404).send({ message: 'No queries found for this user' });
-        }
+        // Ensure user exists and populate connections
+        const user = await User.findById(userId).populate('connections');
+        if (!user) return res.status(404).send({ message: 'User not found' });
+
+        // Collect 1st-degree connections
+        const firstDegreeConnections = user.connections.map(conn => conn._id);
+
+        // Fetch 2nd-degree connections
+        const secondDegreeConnections = await User.find({
+            _id: { $in: firstDegreeConnections },
+        }).populate('connections');
+
+        const secondDegreeIds = secondDegreeConnections.flatMap(conn =>
+            conn.connections.map(c => c._id)
+        );
+
+        // Combine userId with 1st and 2nd degree connections
+        const connectionIds = [userId, ...firstDegreeConnections, ...secondDegreeIds];
+
+        // Fetch recent queries from these users
+        const queries = await Query.find({ userId: { $in: connectionIds } })
+            .sort({ createdAt: -1 })
+            .limit(30) // Fetch max 30 queries
+            .populate('userId', 'name username profilePicture');
+
         res.status(200).send(queries);
+        console.log('Queries:', queries);
     } catch (err) {
         console.error('Error fetching queries:', err);
         res.status(500).send({ message: 'Server error. Please try again later.' });
@@ -100,7 +122,7 @@ const deleteQuery = async (req, res) => {
 
 module.exports = {
     createQuery,
-    getUserQueries,
+    getRecentQueries,
     getQueriesByVisibility,
     updateQuery,
     deleteQuery

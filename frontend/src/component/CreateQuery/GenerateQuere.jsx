@@ -3,12 +3,13 @@ import "./GenerateQuere.css";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
-const QueryPage = ({ closeQuery }) => {
+const QueryPage = ({ closeQuery, addNewQuery }) => {
   const [queryText, setQueryText] = useState("");
   const [visibility, setVisibility] = useState("Public");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const { token } = useContext(AuthContext);
+
   const handleQueryChange = (e) => {
     setQueryText(e.target.value);
   };
@@ -41,6 +42,7 @@ const QueryPage = ({ closeQuery }) => {
       );
 
       console.log("Query submitted successfully:", response.data);
+      addNewQuery(response.data.query); // Add new query to the list
       closeQuery();
     } catch (err) {
       console.error("Error submitting query:", err);

@@ -85,7 +85,7 @@ exports.login = async (req, res) => {
             { expiresIn: '1h' }
         );
 
-        res.status(200).send({ message: 'Login successful', token });
+        res.status(200).send({ message: 'Login successful', token: jwtToken });
     } catch (err) {
         console.error('Error logging in:', err);
         res.status(500).send({ message: 'Server error' });

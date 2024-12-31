@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
           "Content-Type": "application/json",
         },
       });
-
+      console.log("Response status:", response.status);
       if (response.ok) {
         const { user, photoUrl } = await response.json();
         setUser({ ...user, photoUrl });
@@ -48,6 +48,9 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetching user data:", error);
       logout();
+    } finally {
+      // Ensure loading is set to false no matter what
+      setLoading(false);
     }
   };
 

@@ -15,7 +15,9 @@ function Landing() {
   const { token, user, isLoading, setLoading } = useContext(AuthContext);
   const [newPost, setNewPost] = useState(null);
   const [posts, setPosts] = useState(null);
-  const [fetched, setFetched] = useState(false);
+  const [queries, setQueries] = useState(null);
+  const [fetchedPosts, setFetchedPosts] = useState(false);
+  const [fetchedQueries, setFetchedQueries] = useState(false);
 
   useEffect(() => {
     if (user && !isLoading) {
@@ -23,8 +25,9 @@ function Landing() {
     }
   }, [user, isLoading, setLoading]);
 
+  // Fetch recent posts
   const fetchRecentPosts = useCallback(async () => {
-    if (!user || fetched) return;
+    if (!user || fetchedPosts) return;
     try {
       setLoading(true);
       const response = await axios.get(
@@ -36,20 +39,43 @@ function Landing() {
         }
       );
       setPosts(response.data);
-      setFetched(true);
+      setFetchedPosts(true);
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
     }
-  }, [user, setLoading, fetched, token]);
-  console.log("Posts: of landingpage", posts);
+  }, [user, setLoading, fetchedPosts, token]);
 
+  // Fetch recent queries
+  const fetchRecentQueries = useCallback(async () => {
+    if (!user || fetchedQueries) return;
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "http://localhost:5001/queries/GetRecentQueries",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setQueries(response.data);
+      setFetchedQueries(true);
+    } catch (error) {
+      console.error("Error fetching queries:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [user, setLoading, fetchedQueries, token]);
+
+  // Trigger fetch requests when the user is available
   useEffect(() => {
     if (user) {
       fetchRecentPosts();
+      fetchRecentQueries();
     }
-  }, [user, fetchRecentPosts]);
+  }, [user, fetchRecentPosts, fetchRecentQueries]);
 
   const addNewPost = (post) => {
     setPosts((prevPosts) => [
@@ -59,10 +85,8 @@ function Landing() {
     setNewPost(post);
   };
 
-  console.log("newPost:", newPost);
-
   // Show loading screen if still loading
-  if (isLoading && !fetched) return <LoadingScreen />;
+  if (isLoading && !fetchedPosts && !fetchedQueries) return <LoadingScreen />;
 
   const handlePostInputClick = () => {
     setShowPostForm(true);
@@ -130,7 +154,7 @@ function Landing() {
           </div>
         ))}
 
-      {activePage === "Query" && <PostQuery />}
+      {activePage === "Query" && queries && <PostQuery queries={queries} />}
       {activePage === "Code" && <PostCode />}
 
       {/* Show CreatePostPage when user clicks on the input */}

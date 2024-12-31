@@ -61,7 +61,7 @@ exports.getRecentPosts = async (req, res) => {
             .sort({ createdAt: -1 })
             .limit(30) // Fetch a max of 50 posts to paginate on the frontend
             .populate('userId', 'name username profilePicture');
-        console.log('Posts fetched', posts);
+
 
         res.status(200).send(posts);
     } catch (err) {

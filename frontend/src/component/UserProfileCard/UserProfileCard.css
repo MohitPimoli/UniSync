@@ -10,7 +10,7 @@
   margin: 20px;
   margin-left: 40px;
   position: fixed; /* Aligns to the left */
-  top: 100px; /* Adjust for header */
+  top: 112px; /* Adjust for header */
   left: 20px;
 }
 
@@ -91,7 +91,6 @@
   border-top: 1px solid #ddd;
 }
 
-
 .saved-items-button {
   display: block;
   width: fit-content; /* Automatically adjust button width to its content */
@@ -107,7 +106,6 @@
   text-decoration: none;
   transition: background-color 0.3s ease;
 }
-
 
 .saved-items-button:hover {
   background-color: #b74938;

@@ -14,7 +14,7 @@ router.post(
     queryController.createQuery
 );
 
-router.get('/my-queries', authenticateUser, queryController.getUserQueries);
+router.get('/getRecentQueries', authenticateUser, queryController.getRecentQueries);
 
 router.get('/visibility/:visibility', authenticateUser, queryController.getQueriesByVisibility);
 

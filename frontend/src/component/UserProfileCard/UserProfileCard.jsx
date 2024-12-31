@@ -1,49 +1,51 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 import "./UserProfileCard.css";
 
 const UserProfileCard = () => {
-  const user = {
-    name: "Hardik Pant",
-    university: "Graphic Era Hill University",
-    profileViewers: 25,
-    postImpressions: 17,
-    email: "hardikpant@example.com",
-    phone: "+91-9876543210",
-    location: "Dehradun, India",
-    bio: "A passionate developer and tech enthusiast with an interest in AI and ML.",
-  };
+  const { user, isLoading } = useContext(AuthContext);
+
+  useEffect(() => {
+    console.log("Loading state:", isLoading);
+    console.log("User data:", user);
+  }, [isLoading, user]);
+
+  if (!user) {
+    return <div>No user data available.</div>;
+  }
+
+  // Set default values if fields are missing
+  const profilePicture =
+    user.photoUrl || "https://i.postimg.cc/pLymkyHr/user.png";
+  const name = user.name || "N/A";
+  const bio = user.bio || "No bio available";
+  const email = user.email || "Email not available";
+  const location = user.location || "Location not specified";
+  const fieldOfInterest =
+    user.fieldOfInterest?.join(", ") || "No interests listed";
 
   return (
     <div className="profile-card">
       <div className="profile-header">
         <div className="profile-image-container">
           <img
-            src="https://via.placeholder.com/80"
+            src={profilePicture}
             alt="Profile"
             className="profile-image"
+            crossOrigin="anonymous"
           />
         </div>
       </div>
 
       <div className="profile-info">
-        <h3 className="profile-name">{user.name}</h3>
-        <p className="profile-university">{user.university}</p>
-        <p className="profile-bio">{user.bio}</p>
+        <h3 className="profile-name">{name}</h3>
+        <p className="profile-bio">{bio}</p>
         <p className="profile-details">
-          📧 {user.email} <br /> 📞 {user.phone} <br /> 📍 {user.location}
+          📧 {email} <br />
+          📍 {location} <br />
+          🎓 Interests: {fieldOfInterest}
         </p>
-      </div>
-
-      <div className="stats-container">
-        <div className="stat-item">
-          <span>Profile viewers</span>
-          <span className="stat-value">{user.profileViewers}</span>
-        </div>
-        <div className="stat-item">
-          <span>Post impressions</span>
-          <span className="stat-value">{user.postImpressions}</span>
-        </div>
       </div>
 
       <div className="section">
